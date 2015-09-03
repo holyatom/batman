@@ -1,0 +1,35 @@
+{
+  "name": "stalin",
+  "version": "0.0.1",
+  "private": true,
+  "description": "API server",
+  "main": "server/index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/walkapp/stalin.git"
+  },
+  "bugs": {
+    "url": "https://trello.com/b/RcuTZOqM/development"
+  },
+  "homepage": "https://github.com/walkapp/stalin#readme",
+  "dependencies": {
+    "bcryptjs": "^2.2.1",
+    "body-parser": "^1.13.3",
+    "domain": "0.0.1",
+    "errorhandler": "^1.4.2",
+    "express": "^4.13.1",
+    "jade": "^1.11.0",
+    "jsonwebtoken": "^5.0.4",
+    "lodash": "^3.10.0",
+    "mongoose": "^4.1.2",
+    "morgan": "^1.6.1",
+    "underscore-deep-extend": "0.0.5",
+    "url": "^0.11.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-nodemon": "^2.0.3",
+    "gulp-symlink": "^2.1.2"
+  }
+}
