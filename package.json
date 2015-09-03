@@ -1,5 +1,5 @@
 {
-  "name": "stalin",
+  "name": "batman",
   "version": "0.0.1",
   "private": true,
   "description": "API server",
@@ -7,12 +7,12 @@
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/walkapp/stalin.git"
+    "url": "https://github.com/walkapp/batman.git"
   },
   "bugs": {
     "url": "https://trello.com/b/RcuTZOqM/development"
   },
-  "homepage": "https://github.com/walkapp/stalin#readme",
+  "homepage": "https://github.com/walkapp/batman#readme",
   "dependencies": {
     "bcryptjs": "^2.2.1",
     "body-parser": "^1.13.3",
