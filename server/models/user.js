@@ -1,20 +1,23 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import v from 'libs/validators';
 
 
 var schema = new mongoose.Schema({
   username: {
     type: String,
     unique: true,
-    required: true
+    required: v.required(),
+    validate: [v.maxLength(12), v.minLength(4), v.alphanumeric()]
   },
   password: {
     type: String,
-    required: true
+    required: v.required(),
+    validate: [v.maxLength(20), v.minLength(6), v.alphanumeric()]
   },
   created: {
     type: Date,
-    required: true
+    required: v.required()
   },
   full_name: {
     type: String

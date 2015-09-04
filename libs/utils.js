@@ -31,3 +31,11 @@ export function updateValue (keyPath, value, object) {
 export function contains (array, item) {
   return array.indexOf(item) >= 0;
 };
+
+export function format (string, ...args) {
+  while (args.length) {
+    string = string.replace('%s', args.shift());
+  }
+
+  return string;
+}

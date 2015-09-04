@@ -12,24 +12,30 @@ export default class UserController extends ModelController {
       that = this,
       model = new this.Model(req.body);
 
-    this.Model.findOne({ username: model.username }, function (err, doc) {
+    model.set({ created: new Date() });
+
+    model.validate((err) => {
       if (err) {
-        next(err);
+        return this.error(res, err.errors);
       }
 
-      if (doc) {
-        return this.error(req.lang, 'user_exist', 400);
-      }
-
-      model.set({ created: new Date() });
-
-      model.save(function (err, doc) {
+      this.Model.findOne({ username: model.username }, (err, doc) => {
         if (err) {
-          next(err);
+          return next(err);
         }
 
-        var user = doc.toJSON();
-        res.json(user);
+        if (doc) {
+          return this.error(res, 'user_exist', 409);
+        }
+
+        model.save(function (err, doc) {
+          if (err) {
+            return next(err);
+          }
+
+          var user = doc.toJSON();
+          res.json(user);
+        });
       });
     });
   }
