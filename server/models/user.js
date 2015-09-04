@@ -29,10 +29,6 @@ var schema = new mongoose.Schema({
 });
 
 schema.pre('save', function (next) {
-  if (this.isNew) {
-    this.created = new Date();
-  }
-
   if (!this.isModified('password') && !this.isNew) {
     return next();
   }
