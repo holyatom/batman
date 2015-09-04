@@ -19,6 +19,15 @@ export default {
     access_denied: 'Access denied',
     invalid_value: 'Invalid value',
     already_exists: '%s has already registered',
-    non_existent: '%s doesn\'t exist'
+    non_existent: '%s doesn\'t exist',
+
+    // Custom errors, users:
+    bad_username: 'Wrong username',
+    wrong_login_or_password: 'Invalid credentials',
+    unknown_user: 'Unknown username',
+    invalid_username: 'Bad or reserved username',
+
+    // Extra messages:
+    alphanumeric: 'Alphanumeric symbols are allowed only'
   }
 };

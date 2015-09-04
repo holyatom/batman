@@ -2,9 +2,14 @@ import _ from 'lodash';
 import { contains } from 'libs/utils';
 import Controller from './controller';
 import middlewares from '../middlewares';
+import env from 'libs/env';
 
 
 export default class ModelController extends Controller {
+  constructor () {
+    super();
+  }
+
   router () {
     if (!this.actions) {
       throw new Error('Actions are not specified');
