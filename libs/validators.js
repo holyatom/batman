@@ -11,13 +11,13 @@ var
 export default {
   maxLength: (max) => {
     return validator('longer_than_allowed', (val) => {
-      return val.length < max;
+      return val.length <= max;
     });
   },
 
   minLength: (min) => {
     return validator('shorter_than_allowed', (val) => {
-      return val.length > min;
+      return val.length >= min;
     });
   },
 
