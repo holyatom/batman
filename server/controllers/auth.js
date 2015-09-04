@@ -31,7 +31,7 @@ export default class AuthController extends ModelController {
     var { username, password } = req.body;
 
     if (!username || !password) {
-      return this.error(req.lang, 'validation_failed', 400);
+      return this.error(res, { username: 'wrong_login_or_password' });
     }
 
     this.Model.findOne({ username }, (err, doc) => {
@@ -39,12 +39,16 @@ export default class AuthController extends ModelController {
         next(err);
       }
 
+      if (!doc) {
+        return this.error(res, 'unknown_user', 404);
+      }
+
       if (doc && doc.comparePassword(password)) {
         var item = doc.toJSON();
         item.token = this._generateToken(doc);
         res.json(item);
       } else {
-        return this.error(req.lang, 'validation_failed', 400);;
+        return this.error(res, { username: 'wrong_login_or_password' });;
       }
     });
   }

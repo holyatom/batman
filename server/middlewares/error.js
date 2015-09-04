@@ -25,7 +25,7 @@ export default function (res, error, code = 400)  {
   fields = {};
 
   for (let key in error) {
-    let code = error[key].message;
+    let code = error[key].message || error[key];
 
     fields[key] = {
       code: code,

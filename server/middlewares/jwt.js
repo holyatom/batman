@@ -13,7 +13,7 @@ export default function (req, res, next) {
 
   jwt.verify(token, config.secret, function (err, decoded) {
     if (err || !decoded) {
-      return error(req.lang, 'bad_token', 401);
+      return error(res, 'bad_token', 401);
     }
 
     User.findOne({ _id: decoded.sub }, (err, doc) => {
