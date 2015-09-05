@@ -31,11 +31,3 @@ gulp.task('dev', function () {
     exec: 'babel-node'
   });
 });
-
-gulp.task('staging', function () {
-  nodemon({
-    script: 'server/index.js',
-    exec: 'babel-node',
-    env: { 'NODE_ENV': 'staging' }
-  });
-});
