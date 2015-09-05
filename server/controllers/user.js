@@ -1,13 +1,29 @@
-import ModelController from '../../base/model_controller';
-import User from '../../models/user';
+import ModelController from '../base/model_controller';
+import User from '../models/user';
 
 
 export default class UserController extends ModelController {
   get (req, res, next) {
-    res.json(req.user);
+    var username = req.params.username || req.user.username;
+
+    this.Model.findOne({ username }, (err, doc) => {
+      if (err) {
+        return next(err);
+      }
+
+      if (!doc) {
+        return this.notFound(res);
+      }
+
+      return res.json(doc.toJSON());
+    });
   }
 
   create (req, res, next) {
+    if (req.authorized) {
+      return this.notFound(res);
+    }
+
     var
       that = this,
       model = new this.Model(req.body);
@@ -48,4 +64,5 @@ UserController.prototype.actions = ['create', 'get'];
 
 UserController.prototype.create.type = 'post';
 
+UserController.prototype.get.url = '/:username*?';
 UserController.prototype.get.auth = true;
