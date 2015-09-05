@@ -8,8 +8,6 @@ Api server
 
 2. Use system aliases when applicable. `require('../models/awesome')` is better than `require('app/client/models/awesome')`, but `require('app/client/models/awesome')` is better than `require('../../../../client/models/awesome')`.
 
-3. Watch out for using implicit globals like $ and _. They exist only to make using plugins easier. If your code doesn't require underscore for example, and uses it, it will fail to run on the server.
-
 ## Setup
 
 1. Install nodejs:
@@ -48,20 +46,6 @@ Api server
 
 6. PROFIT
 
-
-## Assets management:
-
-It's easier if you install gulp globally: `sudo npm install -g gulp`.
-
-Gulpfile already takes care of assets compilation for you. If you need to compile assets separately, use these commands.
-
-Build assets for development once
-
-`gulp js` `gulp css`
-
-Build assets for development and watch for assets changes
-
-`gulp watch`
 
 ### Sublime settings
 If you use Sublime, here's a recommended config:
