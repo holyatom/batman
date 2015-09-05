@@ -5,7 +5,7 @@ import User from '../models/user';
 export default class UserController extends ModelController {
   get (req, res, next) {
     var username = req.params.username || req.user.username;
-    console.log(username);
+
     this.Model.findOne({ username }, (err, doc) => {
       if (err) {
         return next(err);
