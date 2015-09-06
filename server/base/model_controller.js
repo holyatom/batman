@@ -112,7 +112,9 @@ export default class ModelController extends Controller {
   }
 
   getListOrder (req) {
-    var field = req.query.order[0] === '-' ? req.query.order.substr(1) : req.query.order;
+    var
+      { order } = req.query,
+      field = _.startsWith(order, '-') ? order.substr(1) : order;
 
     if (contains(this.sortableFields, field)) {
       return req.query.order;
