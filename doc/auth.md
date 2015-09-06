@@ -3,8 +3,8 @@
 ### Log in
 
 Request:
-```post
-PUT /api/v1/users/1,2,3
+```json
+POST /api/auth
 
 {
    "username": "atomiomi",
@@ -13,7 +13,7 @@ PUT /api/v1/users/1,2,3
 ```
 Response:
 
-```
+```json
 {
   "_id": "55ea0a9f95164eb41cec6d51",
   "created": "2015-09-04T21:18:23.681Z",
