@@ -55,11 +55,70 @@ export default class ModelController extends Controller {
   }
 
   list (req, res, next) {
-    res.json({ message: 'Empty method' });
+    var
+      order,
+      filters = {};
+
+    if (req.query.order && this.sortableFields) {
+      order = this.getListOrder(req);
+    }
+
+    if ((this.filterableFields || {}).length) {
+      filters = this.getListFilters(req);
+    }
+
+    this.Model
+      .find(filters)
+      .sort(order)
+      .exec((error, docs) => {
+        if (error) {
+          return next(error);
+        }
+
+        res.json({ collection: docs });
+      });
   }
 
-  getModelItem (req, res, next) {
-    next();
+  getListFilters (req) {
+    var filter = {};
+
+    for (let key in req.query) {
+      if (!_.startsWith(key, '_')) {
+        continue;
+      }
+
+      let
+        operation,
+        field = key.substr(1);
+
+      if (contains(field, '__')) {
+        [field, operation] = field.split('__');
+      }
+
+      if (!contains(this.filterableFields, field)) {
+        continue;
+      }
+
+      if (!operation) {
+        filter[field] = req.query[key];
+      }
+
+      if (operation === 'contains') {
+        filter[field] = { $regex: req.query[key], $options: 'i' };
+      }
+    }
+
+    return filter;
+  }
+
+  getListOrder (req) {
+    var
+      { order } = req.query,
+      field = _.startsWith(order, '-') ? order.substr(1) : order;
+
+    if (contains(this.sortableFields, field)) {
+      return req.query.order;
+    }
   }
 }
 
@@ -67,6 +126,7 @@ ModelController.prototype.logPrefix = 'model-controller';
 ModelController.prototype.urlPrefix = '';
 ModelController.prototype.Model = null;
 ModelController.prototype.sortableFields = null;
+ModelController.prototype.filterableFields = null;
 ModelController.prototype.auth = false;
 
 ModelController.prototype.create.type = 'post';
