@@ -1,4 +1,4 @@
-## User posts
+## Posts
 
 ### Create :lock:
 
