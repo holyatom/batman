@@ -11,6 +11,7 @@ export default class PostsController extends ModelController {
     this.Model = Post;
     this.auth = true;
     this.actions = ['create', 'list'];
+    this.sortableFields = ['created'];
 
     this.create.type = 'post';
   }
