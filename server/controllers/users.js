@@ -15,6 +15,8 @@ export default class UsersController extends ModelController {
 
     this.get.url = '/:username';
     this.get.auth = true;
+
+    this.list.auth = true;
   }
 
   get (req, res, next) {
@@ -72,5 +74,9 @@ export default class UsersController extends ModelController {
         });
       });
     });
+  }
+
+  list (...args) {
+    super.list(...args);
   }
 }
