@@ -94,11 +94,23 @@ export default class ModelController extends Controller {
       filters = _.assign(filters, this.getCustomListFilters(req));
     }
 
-    var { page, perPage } = this.getPagination(req, res);
-
-    this.Model
+    var query = this.Model
       .find(filters)
-      .sort(order)
+      .sort(order);
+
+    this.paginate(req, res, next, query, filters);
+  }
+
+  paginate (req, res, next, query, filters) {
+    var { page, perPage } = this.getPagination(req);
+
+    var error = this.validatePagination(page, perPage);
+
+    if (!_.isEmpty(error)) {
+      return this.error(res, error);
+    }
+
+    query
       .skip((page - 1) * perPage)
       .limit(perPage)
       .exec((error, docs) => {
@@ -121,10 +133,14 @@ export default class ModelController extends Controller {
       });
   }
 
-  getPagination (req, res) {
+  getPagination (req) {
     var page = req.query.page || this.defaultPage;
     var perPage = req.query.per_page || this.defaultPerPage;
 
+    return { page, perPage };
+  }
+
+  validatePagination (page, perPage) {
     var error = {};
 
     if (perPage <= 0) {
@@ -138,11 +154,7 @@ export default class ModelController extends Controller {
       error.page = 'less_than_allowed';
     }
 
-    if (!_.isEmpty(error)) {
-      return this.error(res, error);
-    }
-
-    return { page, perPage };
+    return error;
   }
 
   getListFilters (req) {
