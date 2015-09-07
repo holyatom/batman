@@ -3,6 +3,20 @@ import User from '../models/user';
 
 
 export default class UsersController extends ModelController {
+  constructor () {
+    super();
+    this.logPrefix = 'users-controller';
+    this.urlPrefix = '/users';
+    this.Model = User;
+    this.actions = ['create', 'get', 'list'];
+    this.filterableFields = ['username']
+
+    this.create.type = 'post';
+
+    this.get.url = '/:username';
+    this.get.auth = true;
+  }
+
   get (req, res, next) {
     var username = req.params.username;
 
@@ -60,13 +74,3 @@ export default class UsersController extends ModelController {
     });
   }
 }
-
-UsersController.prototype.logPrefix = 'users-controller';
-UsersController.prototype.urlPrefix = '/users';
-UsersController.prototype.Model = User;
-UsersController.prototype.actions = ['create', 'get'];
-
-UsersController.prototype.create.type = 'post';
-
-UsersController.prototype.get.url = '/:username';
-UsersController.prototype.get.auth = true;
