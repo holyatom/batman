@@ -86,8 +86,8 @@ export default class ModelController extends Controller {
       filters = this.getListFilters(req);
     }
 
-    if (this.modelFilters) {
-      filters = _.assign(filters, this.modelFilters(req));
+    if (this.getCustomListFilters) {
+      filters = _.assign(filters, this.getCustomListFilters(req));
     }
 
     this.Model

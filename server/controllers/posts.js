@@ -3,9 +3,26 @@ import Post from '../models/post';
 import User from '../models/user';
 
 
-export default class UserPostsController extends ModelController {
+export default class PostsController extends ModelController {
+  constructor () {
+    super();
+    this.logPrefix = 'user-posts-controller';
+    this.urlPrefix = '/users/:username/posts';
+    this.Model = Post;
+    this.auth = true;
+    this.actions = ['create', 'list'];
+
+    this.create.type = 'post';
+  }
+
   create (req, res, next) {
-    var model = new this.Model(req.body);
+    var
+      { username } = req.params,
+      model = new this.Model(req.body);
+
+    if (username !== 'profile') {
+      return this.notFound();
+    }
 
     model.set({
       user_id: req.user._id,
@@ -28,8 +45,12 @@ export default class UserPostsController extends ModelController {
   }
 
   list (req, res, next) {
-    var username = req.params.username || req.user.username;
-    console.log('ERER', username);
+    var { username } = req.params;
+
+    if (username === 'profile') {
+      username = req.user.username;
+    }
+
     User.findOne({ username }, (err, doc) => {
       if (err) {
         return next(err);
@@ -44,20 +65,9 @@ export default class UserPostsController extends ModelController {
     });
   }
 
-  modelFilters (req) {
+  getCustomListFilters (req) {
     return {
       user_id: req.modelUserId
     }
   }
 }
-
-UserPostsController.prototype.logPrefix = 'user-posts-controller';
-UserPostsController.prototype.urlPrefix = '/user';
-UserPostsController.prototype.Model = Post;
-// UserPostsController.prototype.auth = true;
-UserPostsController.prototype.actions = ['create', 'list'];
-
-UserPostsController.prototype.create.url = '/posts';
-UserPostsController.prototype.create.type = 'post';
-
-UserPostsController.prototype.list.url = '/posts';
