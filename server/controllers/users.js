@@ -2,9 +2,13 @@ import ModelController from '../base/model_controller';
 import User from '../models/user';
 
 
-export default class UserController extends ModelController {
+export default class UsersController extends ModelController {
   get (req, res, next) {
-    var username = req.params.username || req.user.username;
+    var username = req.params.username;
+
+    if (username === 'profile') {
+      username = req.user.username;
+    }
 
     this.Model.findOne({ username }, (err, doc) => {
       if (err) {
@@ -57,12 +61,12 @@ export default class UserController extends ModelController {
   }
 }
 
-UserController.prototype.logPrefix = 'user-controller';
-UserController.prototype.urlPrefix = '/user';
-UserController.prototype.Model = User;
-UserController.prototype.actions = ['create', 'get'];
+UsersController.prototype.logPrefix = 'users-controller';
+UsersController.prototype.urlPrefix = '/users';
+UsersController.prototype.Model = User;
+UsersController.prototype.actions = ['create', 'get'];
 
-UserController.prototype.create.type = 'post';
+UsersController.prototype.create.type = 'post';
 
-UserController.prototype.get.url = '/:username*?';
-UserController.prototype.get.auth = true;
+UsersController.prototype.get.url = '/:username';
+UsersController.prototype.get.auth = true;
