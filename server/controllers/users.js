@@ -9,14 +9,14 @@ export default class UsersController extends ModelController {
     this.urlPrefix = '/users';
     this.Model = User;
     this.actions = ['create', 'get', 'list'];
-    this.filterableFields = ['username']
+    this.filterableFields = ['username'];
 
     this.create.type = 'post';
 
     this.get.url = '/:username';
     this.get.auth = true;
 
-    this.list.auth = true;
+    this.list.auth = false;
   }
 
   get (req, res, next) {

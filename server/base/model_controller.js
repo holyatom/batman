@@ -15,6 +15,10 @@ export default class ModelController extends Controller {
     this.filterableFields = null;
     this.auth = false;
 
+    this.defaultPage = 1;
+    this.defaultPerPage = 20;
+    this.maxPerPage = 100;
+
     this.create.type = 'post';
     this.update.type = 'put';
     this.delete.type = 'delete';
@@ -90,16 +94,56 @@ export default class ModelController extends Controller {
       filters = _.assign(filters, this.getCustomListFilters(req));
     }
 
+    var { page, perPage } = this.getAndCheckPaginationParams(req, res);
+
     this.Model
       .find(filters)
       .sort(order)
+      .skip((page - 1) * perPage)
+      .limit(perPage)
       .exec((error, docs) => {
         if (error) {
           return next(error);
         }
 
-        res.json({ collection: docs });
+        this.Model.count({}, (error, count) => {
+          if (error) {
+            return next(error);
+          }
+
+          res.json({
+            total: count,
+            page: page,
+            perPage: perPage,
+            collection: docs
+          });
+        });
       });
+  }
+
+  getAndCheckPaginationParams (req, res) {
+    var page = req.query.page || this.defaultPage;
+    var perPage = req.query.per_page || this.defaultPerPage;
+
+    var errorMessage = '';
+
+    if (page <= 0) {
+      errorMessage += 'page parameter is non-positive\r\n';
+    }
+
+    if (perPage <= 0) {
+      errorMessage += 'per_page parameter is non-positive\r\n';
+    }
+
+    if (perPage > this.maxPerPage) {
+      errorMessage += `per_page parameter exceeds max value which is ${this.maxPerPage}\r\n`;
+    }
+
+    if (!_.isEmpty(errorMessage)) {
+      res.status(422).send(errorMessage);
+    }
+
+    return { page, perPage };
   }
 
   getListFilters (req) {
