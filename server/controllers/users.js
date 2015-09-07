@@ -16,7 +16,7 @@ export default class UsersController extends ModelController {
     this.get.url = '/:username';
     this.get.auth = true;
 
-    this.list.auth = false;
+    this.list.auth = true;
   }
 
   get (req, res, next) {
