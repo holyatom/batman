@@ -1,6 +1,6 @@
 ## Search
 
-### Users
+### Users :lock:
 
 Request:
 ```json
