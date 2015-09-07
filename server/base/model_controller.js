@@ -106,7 +106,7 @@ export default class ModelController extends Controller {
           return next(error);
         }
 
-        this.Model.count({}, (error, count) => {
+        this.Model.count(filters, (error, count) => {
           if (error) {
             return next(error);
           }
