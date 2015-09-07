@@ -16,7 +16,6 @@
   "dependencies": {
     "bcryptjs": "^2.2.1",
     "body-parser": "^1.13.3",
-    "domain": "0.0.1",
     "errorhandler": "^1.4.2",
     "express": "^4.13.1",
     "jade": "^1.11.0",

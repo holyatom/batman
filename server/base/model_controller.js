@@ -15,6 +15,10 @@ export default class ModelController extends Controller {
     this.filterableFields = null;
     this.auth = false;
 
+    this.defaultPage = 1;
+    this.defaultPerPage = 20;
+    this.maxPerPage = 100;
+
     this.create.type = 'post';
     this.update.type = 'put';
     this.delete.type = 'delete';
@@ -90,16 +94,67 @@ export default class ModelController extends Controller {
       filters = _.assign(filters, this.getCustomListFilters(req));
     }
 
-    this.Model
+    var query = this.Model
       .find(filters)
-      .sort(order)
+      .sort(order);
+
+    this.paginate(req, res, next, query, filters);
+  }
+
+  paginate (req, res, next, query, filters) {
+    var { page, perPage } = this.getPagination(req);
+
+    var error = this.validatePagination(page, perPage);
+
+    if (!_.isEmpty(error)) {
+      return this.error(res, error);
+    }
+
+    query
+      .skip((page - 1) * perPage)
+      .limit(perPage)
       .exec((error, docs) => {
         if (error) {
           return next(error);
         }
 
-        res.json({ collection: docs });
+        this.Model.count(filters, (error, count) => {
+          if (error) {
+            return next(error);
+          }
+
+          res.json({
+            total: count,
+            page: page,
+            perPage: perPage,
+            collection: docs
+          });
+        });
       });
+  }
+
+  getPagination (req) {
+    var page = req.query.page || this.defaultPage;
+    var perPage = req.query.per_page || this.defaultPerPage;
+
+    return { page, perPage };
+  }
+
+  validatePagination (page, perPage) {
+    var error = {};
+
+    if (perPage <= 0) {
+      error.per_page = 'less_than_allowed';
+    }
+    else if (perPage > this.maxPerPage) {
+      error.per_page = 'more_than_allowed';
+    }
+
+    if (page <= 0) {
+      error.page = 'less_than_allowed';
+    }
+
+    return error;
   }
 
   getListFilters (req) {

@@ -8,12 +8,12 @@ import { format } from 'libs/utils';
 // error - The error as {mixed}.
 // code  - The HTTP status code as {Number}.
 
-export default function (res, error, code = 400)  {
+export default function (res, error, code = 422)  {
   var
     fields,
     lang = (res.locals || {}).lang || 'en';
 
-  if (code !== 400) {
+  if (code !== 422) {
     return res.status(code).json({
       error: {
         code: error,

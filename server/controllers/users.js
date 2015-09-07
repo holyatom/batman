@@ -9,7 +9,7 @@ export default class UsersController extends ModelController {
     this.urlPrefix = '/users';
     this.Model = User;
     this.actions = ['create', 'get', 'list'];
-    this.filterableFields = ['username']
+    this.filterableFields = ['username'];
 
     this.create.type = 'post';
 
