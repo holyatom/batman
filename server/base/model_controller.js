@@ -94,7 +94,7 @@ export default class ModelController extends Controller {
       filters = _.assign(filters, this.getCustomListFilters(req));
     }
 
-    var { page, perPage } = this.getAndCheckPaginationParams(req, res);
+    var { page, perPage } = this.getPagination(req, res);
 
     this.Model
       .find(filters)
@@ -121,26 +121,25 @@ export default class ModelController extends Controller {
       });
   }
 
-  getAndCheckPaginationParams (req, res) {
+  getPagination (req, res) {
     var page = req.query.page || this.defaultPage;
     var perPage = req.query.per_page || this.defaultPerPage;
 
-    var errorMessage = '';
-
-    if (page <= 0) {
-      errorMessage += 'page parameter is non-positive\r\n';
-    }
+    var error = {};
 
     if (perPage <= 0) {
-      errorMessage += 'per_page parameter is non-positive\r\n';
+      error.per_page = 'less_than_allowed';
+    }
+    else if (perPage > this.maxPerPage) {
+      error.per_page = 'more_than_allowed';
     }
 
-    if (perPage > this.maxPerPage) {
-      errorMessage += `per_page parameter exceeds max value which is ${this.maxPerPage}\r\n`;
+    if (page <= 0) {
+      error.page = 'less_than_allowed';
     }
 
-    if (!_.isEmpty(errorMessage)) {
-      res.status(422).send(errorMessage);
+    if (!_.isEmpty(error)) {
+      return this.error(res, error);
     }
 
     return { page, perPage };
