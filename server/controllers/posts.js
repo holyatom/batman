@@ -22,7 +22,7 @@ export default class PostsController extends ModelController {
       model = new this.Model(req.body);
 
     if (username !== 'profile') {
-      return this.notFound();
+      return this.notFound(res);
     }
 
     model.set({
