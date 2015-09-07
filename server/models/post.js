@@ -1,26 +1,25 @@
 import mongoose from 'mongoose';
+import v from 'libs/validators';
 
 
 var schema = new mongoose.Schema({
   description: {
     type: String,
-    required: true
+    required: v.required()
   },
   address: {
-    type: String,
-    required: true
+    type: String
   },
   image_url: {
-    type: String,
-    required: true
+    type: String
   },
-  user: {
+  user_id: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true
+    required: v.required()
   },
   created: {
     type: Date,
-    required: true
+    required: v.required()
   }
 });
 

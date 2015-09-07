@@ -67,6 +67,10 @@ export default class ModelController extends Controller {
       filters = this.getListFilters(req);
     }
 
+    if (this.modelFilters) {
+      filters = _.assign(filters, this.modelFilters(req));
+    }
+
     this.Model
       .find(filters)
       .sort(order)
