@@ -5,6 +5,25 @@ import middlewares from '../middlewares';
 
 
 export default class ModelController extends Controller {
+  constructor () {
+    super();
+
+    this.logPrefix = 'model-controller';
+    this.urlPrefix = '';
+    this.Model = null;
+    this.sortableFields = null;
+    this.filterableFields = null;
+    this.auth = false;
+
+    this.create.type = 'post';
+    this.update.type = 'put';
+    this.delete.type = 'delete';
+
+    this.get.url = '/:id';
+    this.update.url = '/:id';
+    this.delete.url = '/:id';
+  }
+
   router () {
     if (!this.actions) {
       throw new Error('Actions are not specified');
@@ -125,18 +144,3 @@ export default class ModelController extends Controller {
     }
   }
 }
-
-ModelController.prototype.logPrefix = 'model-controller';
-ModelController.prototype.urlPrefix = '';
-ModelController.prototype.Model = null;
-ModelController.prototype.sortableFields = null;
-ModelController.prototype.filterableFields = null;
-ModelController.prototype.auth = false;
-
-ModelController.prototype.create.type = 'post';
-ModelController.prototype.update.type = 'put';
-ModelController.prototype.delete.type = 'delete';
-
-ModelController.prototype.get.url = '/:id';
-ModelController.prototype.update.url = '/:id';
-ModelController.prototype.delete.url = '/:id';

@@ -1,10 +1,10 @@
-## User
+## Users
 
 ### Create
 
 Request:
 ```json
-POST /api/user
+POST /api/users
 
 {
    "username": "chuck",
@@ -25,11 +25,11 @@ Response:
 }
 ```
 
-### Get
+### Get :lock:
 
 Request:
 ```json
-GET /api/user/:username
+GET /api/users/:username
 ```
 
 Response:
@@ -43,11 +43,11 @@ Response:
 }
 ```
 
-### Get current user 
+### Get current user :lock:
 
 Request:
 ```json
-GET /api/user
+GET /api/users/profile
 ```
 
 Response:

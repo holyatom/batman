@@ -6,6 +6,16 @@ import User from '../models/user';
 
 
 export default class AuthController extends ModelController {
+  constructor () {
+    super();
+    this.logPrefix = 'auth-controller';
+    this.urlPrefix = '/auth';
+    this.Model = User;
+    this.actions = ['login'];
+
+    this.login.type = 'post';
+  }
+
   _generateToken (user) {
     var
       expires = new Date(),
@@ -53,10 +63,3 @@ export default class AuthController extends ModelController {
     });
   }
 }
-
-AuthController.prototype.logPrefix = 'auth-controller';
-AuthController.prototype.urlPrefix = '/auth';
-AuthController.prototype.Model = User;
-AuthController.prototype.actions = ['login'];
-
-AuthController.prototype.login.type = 'post';

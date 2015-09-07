@@ -2,9 +2,29 @@ import ModelController from '../base/model_controller';
 import User from '../models/user';
 
 
-export default class UserController extends ModelController {
+export default class UsersController extends ModelController {
+  constructor () {
+    super();
+    this.logPrefix = 'users-controller';
+    this.urlPrefix = '/users';
+    this.Model = User;
+    this.actions = ['create', 'get', 'list'];
+    this.filterableFields = ['username']
+
+    this.create.type = 'post';
+
+    this.get.url = '/:username';
+    this.get.auth = true;
+
+    this.list.auth = true;
+  }
+
   get (req, res, next) {
-    var username = req.params.username || req.user.username;
+    var username = req.params.username;
+
+    if (username === 'profile') {
+      username = req.user.username;
+    }
 
     this.Model.findOne({ username }, (err, doc) => {
       if (err) {
@@ -55,14 +75,8 @@ export default class UserController extends ModelController {
       });
     });
   }
+
+  list (...args) {
+    super.list(...args);
+  }
 }
-
-UserController.prototype.logPrefix = 'user-controller';
-UserController.prototype.urlPrefix = '/user';
-UserController.prototype.Model = User;
-UserController.prototype.actions = ['create', 'get'];
-
-UserController.prototype.create.type = 'post';
-
-UserController.prototype.get.url = '/:username*?';
-UserController.prototype.get.auth = true;
