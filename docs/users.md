@@ -1,4 +1,4 @@
-## User
+## Users
 
 ### Create
 
@@ -25,7 +25,7 @@ Response:
 }
 ```
 
-### Get
+### Get :lock:
 
 Request:
 ```json
@@ -43,7 +43,7 @@ Response:
 }
 ```
 
-### Get current user
+### Get current user :lock:
 
 Request:
 ```json
