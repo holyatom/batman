@@ -11,7 +11,6 @@ import middlewares from '../middlewares';
 
 export default class Controller {
   constructor () {
-    this.log = log;
     this.logPrefix = 'controller';
   }
 
@@ -63,6 +62,7 @@ export default class Controller {
   }
 }
 
+Controller.prototype.log = log;
 Controller.prototype.middlewares = middlewares;
 Controller.prototype.errorMessage = langs.errorMessage;
 Controller.prototype.error = middlewares.error;
