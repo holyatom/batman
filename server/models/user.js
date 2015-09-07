@@ -8,7 +8,7 @@ var schema = new mongoose.Schema({
     type: String,
     unique: true,
     required: v.required(),
-    validate: [v.maxLength(12), v.minLength(4), v.alphanumeric()]
+    validate: [v.badUsername(), v.maxLength(12), v.minLength(4), v.alphanumeric()]
   },
   password: {
     type: String,
