@@ -22,7 +22,7 @@ The paginated collection response has the following format:
 {
   "total": 1,
   "page": 1,
-  "perPage": 20,
+  "per_page": 20,
   "collection": [
     {
       "_id": "55ec37acedce5c0016801f8e",
