@@ -126,7 +126,7 @@ export default class ModelController extends Controller {
           res.json({
             total: count,
             page: page,
-            perPage: perPage,
+            per_page: perPage,
             collection: docs
           });
         });
