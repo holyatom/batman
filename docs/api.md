@@ -11,6 +11,35 @@ All requests with body (POST, PUT) should have `application/json` content type.
 
 Authentication is passed by providing a valid value in `X-Access-Token` HTTP header of the request.
 
+## Pagination
+
+Collection of resources returned by `GET` method is paginated. Pagination is controlled with two parameters:
+  - `page` specifies the page number (value is 1-based). The parameter is optional. The default value is 1.
+  - `per_page` specifies the number of items per page. The parameter is optional. The default value is 20. The maximum value is 100.
+   
+The paginated collection response has the following format:
+```json
+{
+  "total": 1,
+  "page": 1,
+  "perPage": 20,
+  "collection": [
+    {
+      "_id": "55ec37acedce5c0016801f8e",
+      "created": "2015-09-06T12:55:08.951Z",
+      "full_name": "Dmitriy Melnik",
+      "username": "mitro",
+      "__v": 0,
+      "image_url": "/images/default_avatar.jpg"
+    }
+  ]
+}
+```
+
+`total` contains the total size of the requested collection (respecting filters).
+`page` contains the number of the returned page. `per_page` contains the requested number of items per page.
+`collection` contains the returned items.
+
 ## Errors format
 
 If the request is failed, server returns the response with error.
