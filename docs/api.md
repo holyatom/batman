@@ -20,11 +20,18 @@ Collection of resources returned by `GET` method is paginated. Pagination is con
 The paginated collection response has the following format:
 ```json
 {
-  "total": 50,
-  "page": 1,
-  "per_page": 20,
+  "total": 1,
+  "page":1,
+  "perPage":20,
   "collection": [
-    // ...
+    {
+      "_id": "55ec37acedce5c0016801f8e",
+      "created": "2015-09-06T12:55:08.951Z",
+      "full_name": "Dmitriy Melnik",
+      "username": "mitro",
+      "__v": 0,
+      "image_url": "/images/default_avatar.jpg"
+    }
   ]
 }
 ```
