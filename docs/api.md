@@ -20,9 +20,9 @@ Collection of resources returned by `GET` method is paginated. Pagination is con
 The paginated collection response has the following format:
 ```json
 {
-  "total": 50
-  "page": 1
-  "per_page": 20
+  "total": 50,
+  "page": 1,
+  "per_page": 20,
   "collection": [
     // ...
   ]
