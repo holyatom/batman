@@ -15,7 +15,8 @@ var schema = new mongoose.Schema({
     type: String
   },
   address: {
-    type: String
+    type: String,
+    required: v.required()
   },
   user_id: {
     type: mongoose.Schema.Types.ObjectId,

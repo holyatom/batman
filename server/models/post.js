@@ -8,7 +8,8 @@ var schema = new mongoose.Schema({
     required: v.required()
   },
   address: {
-    type: String
+    type: String,
+    required: v.required()
   },
   image_url: {
     type: String
