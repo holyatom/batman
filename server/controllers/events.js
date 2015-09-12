@@ -2,6 +2,7 @@ import ModelController from '../base/model_controller';
 import Event from '../models/event';
 import User from '../models/user';
 
+
 export default class EventsController extends ModelController {
   constructor () {
     super();
