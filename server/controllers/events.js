@@ -67,8 +67,10 @@ export default class EventsController extends ModelController {
   }
 
   getCustomListFilters (req) {
+    var currentDate = new Date();
     return {
-      user_id: req.modelUserId
+      user_id: req.modelUserId,
+      date: {$gt: currentDate}
     }
   }
 }
