@@ -8,7 +8,7 @@ POST /api/users/profile/events
 
 {
   "description": "first event",
-  "date": "Sat Sep 12 2015 20:02:19 GMT+0600"
+  "date": "Sat Sep 12 2015 20:02:19 GMT+0600",
   "image_url": "http://image.jpg",
   "address": "Astana, Kazakhstan"
 }
