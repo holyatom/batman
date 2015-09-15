@@ -34,9 +34,9 @@ export default class FollowersController extends ModelController {
 
       var followerFilters = {
         followee_id: followeeId,
-        started: { $gt: currentDate },
+        started: { $lt: currentDate },
         ended: { $or: [
-          { $lt: currentDate },
+          { $gt: currentDate },
           { $eq: null }
         ]}
       };
