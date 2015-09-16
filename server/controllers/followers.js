@@ -6,7 +6,7 @@ import Follower from '../models/follower';
 export default class FollowersController extends ModelController {
   constructor() {
     super();
-    this.logPrefix = 'follows-controller';
+    this.logPrefix = 'followers-controller';
     this.urlPrefix = '/users/:username/followers';
     this.Model = User;
     this.auth = true;
