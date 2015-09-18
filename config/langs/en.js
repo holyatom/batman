@@ -27,6 +27,10 @@ export default {
     unknown_user: 'Unknown username',
     invalid_username: 'Bad or reserved username',
 
+    // Following errors
+    already_followed: 'User is already followed',
+    self_following: 'User tries to follow themselves',
+
     // Extra messages:
     alphanumeric: 'Alphanumeric symbols are allowed only'
   }

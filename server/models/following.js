@@ -20,4 +20,4 @@ var schema = new mongoose.Schema({
   }
 });
 
-export default mongoose.model('Follower', schema);
+export default mongoose.model('Following', schema);

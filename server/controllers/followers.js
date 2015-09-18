@@ -1,6 +1,6 @@
 import ModelController from '../base/model_controller';
 import User from '../models/user';
-import Follower from '../models/follower';
+import Follower from '../models/following';
 
 
 export default class FollowersController extends ModelController {

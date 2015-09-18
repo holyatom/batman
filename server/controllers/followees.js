@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import ModelController from '../base/model_controller';
 import User from '../models/user';
-import Follower from '../models/follower';
+import Following from '../models/following';
 
 
 export default class FolloweesController extends ModelController {
@@ -18,79 +18,70 @@ export default class FolloweesController extends ModelController {
   }
 
   create (req, res, next) {
-    this.findFollowerId(req, res, next)
-      .then(this.findFollowee)
-      .then(this.assertNotFollowingSelf)
-      .then(this.assertNotYetFollowing)
-      .then(this.saveFollower)
-      .then(this.sendNoContent)
-      .catch(this.handleError);
-  }
-
-  findFollowerId (req, res, next) {
-    console.log('findCurrentUser');
-    return new Promise((resolve, reject) => {
-      var { username } = req.params;
+      var { username, followee_username } = req.params;
 
       if (username !== 'profile') {
-        return this.notFound(res);
+          return this.notFound(res);
       }
 
       var followerId = req.user._id;
-      resolve({ req, res, next, followerId });
-    });
-  }
 
-  findFollowee (value) {
-    console.log('findFollowee');
-    var
-      { req, res } = value,
-      { followee_username } = req.params;
+      this.Model.findOne({ username: followee_username }, (err, doc) => {
+        if (err) {
+          return next(err);
+        }
 
-    User.findOne({ username: followee_username }, (err, doc) => {
-      if (err) {
-        throw err;
-      }
+        if (!doc) {
+          return this.notFound(res);
+        }
 
-      if (!doc) {
-        return this.notFound(res);
-      }
+        var followeeId = doc._id;
 
-      var followeeId = doc._id;
+        if (followerId.equals(followeeId)) {
+          return this.error(res, 'self_following', 409);
+        }
 
-      return _.assign(value, { followeeId });
-    });
-  }
+        var following = new Following({
+          follower_id: followerId,
+          followee_id: followeeId,
+          started: new Date(),
+          ended: null,
+        });
 
-  assertNotFollowingSelf (value) {
-    console.log('assertNotFollowingSelf');
-    var { followerId, followeeId } = value;
+        following.validate((err) => {
+          if (err) {
+            return this.error(res, err.errors);
+          }
 
-    if (followerId.equals(followeeId)) {
-      // TODO Change error code
-      return this.notFound();
-    }
+          var filter = {
+            follower_id: followerId,
+            followee_id: followeeId,
+            started: { $lt: new Date() },
+            $or: [
+              { ended: null },
+              { ended: { $gt: new Date() } }
+            ]
+          };
 
-    return value;
-  }
+          Following.findOne(filter, (err, doc) => {
+            if (err) {
+              return next(err);
+            }
 
-  assertNotYetFollowing (value) {
-    console.log('assertNotYetFollowing');
-    return value;
-  }
+            if (doc) {
+              return this.error(res, 'already_followed', 409);
+            }
 
-  saveFollower (value) {
-    console.log('saveFollower');
-    return value;
-  }
+            following.save((err, doc) => {
+              if (err) {
+                return next(err);
+              }
 
-  sendNoContent (value) {
-    console.log('sendNoContent');
-    res.json({message: 'No content'})
-  }
-
-  handleError (err) {
-    console.log(`handleError: ${err}`);
+              res.status(204).end();
+            });
+          });
+        });
+      });
   }
 
   list (req, res, next) {
@@ -121,7 +112,7 @@ export default class FolloweesController extends ModelController {
         ]}
       };
 
-      Follower.find(followerFilters, 'followee_id', (err, docs) => {
+      Following.find(followerFilters, 'followee_id', (err, docs) => {
         if (err) {
           return next(err);
         }
