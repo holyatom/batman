@@ -11,10 +11,12 @@ export default class FolloweesController extends ModelController {
     this.urlPrefix = '/users/:username/following';
     this.Model = User;
     this.auth = this;
-    this.actions = ['create', 'list'];
+    this.actions = ['create', 'delete', 'list'];
 
     this.create.type = 'put';
     this.create.url = '/:followee_username';
+
+    this.delete.url = '/:followee_username';
   }
 
   create (req, res, next) {
@@ -57,10 +59,7 @@ export default class FolloweesController extends ModelController {
             follower_id: followerId,
             followee_id: followeeId,
             started: { $lt: new Date() },
-            $or: [
-              { ended: null },
-              { ended: { $gt: new Date() } }
-            ]
+            ended: null,
           };
 
           Following.findOne(filter, (err, doc) => {
@@ -82,6 +81,61 @@ export default class FolloweesController extends ModelController {
           });
         });
       });
+  }
+
+  delete (req, res, next) {
+    var { username, followee_username } = req.params;
+
+    if (username !== 'profile') {
+      return this.notFound(res);
+    }
+
+    var followerId = req.user._id;
+
+    this.Model.findOne({username: followee_username}, (err, doc) => {
+      if (err) {
+        return next(err);
+      }
+
+      if (!doc) {
+        return this.notFound(res);
+      }
+
+      var followeeId = doc._id;
+
+      if (followerId.equals(followeeId)) {
+        return this.error(res, 'self_unfollowing', 409);
+      }
+
+      var filter = {
+        follower_id: followerId,
+        followee_id: followeeId,
+        started: { $lt: new Date() },
+        ended: null,
+      };
+
+      Following.findOne(filter, (err, doc) => {
+        if (err) {
+          return next(err);
+        }
+
+        if (!doc) {
+          return this.error(res, 'not_followed', 409);
+        }
+
+        doc.set({
+          ended: new Date(),
+        });
+
+        doc.save((err, doc) => {
+          if (err) {
+            return next(err);
+          }
+
+          res.status(204).end();
+        });
+      });
+    });
   }
 
   list (req, res, next) {
