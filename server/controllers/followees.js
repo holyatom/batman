@@ -11,12 +11,14 @@ export default class FolloweesController extends ModelController {
     this.urlPrefix = '/users/:username/following';
     this.Model = User;
     this.auth = this;
-    this.actions = ['create', 'delete', 'list'];
+    this.actions = ['create', 'delete', 'get', 'list'];
 
     this.create.type = 'put';
     this.create.url = '/:followee_username';
 
     this.delete.url = '/:followee_username';
+
+    this.get.url = '/:followee_username';
   }
 
   create (req, res, next) {
@@ -81,6 +83,58 @@ export default class FolloweesController extends ModelController {
           });
         });
       });
+  }
+
+  get (req, res, next) {
+    var { username, followee_username } = req.params;
+
+    if (username === 'profile') {
+      username = req.user.username;
+    }
+
+    this.Model.findOne({ username }, (err, doc) => {
+      if (err) {
+        return next(err);
+      }
+
+      if (!doc) {
+        return this.notFound(res);
+      }
+
+      var followerId = doc._id;
+
+      this.Model.findOne({ username: followee_username }, (err, doc) => {
+        if (err) {
+          return next(err);
+        }
+
+        if (!doc) {
+          return this.notFound(res);
+        }
+
+        var followeeId = doc._id;
+
+        var filter = {
+          follower_id: followerId,
+          followee_id: followeeId,
+          started: { $lt: new Date() },
+          ended: null,
+        };
+
+        Following.findOne(filter, (err, doc) => {
+          if (err) {
+            return next(err);
+          }
+
+          if (doc) {
+            return res.status(204).end();
+          }
+          else {
+            return this.notFound(res);
+          }
+        });
+      });
+    });
   }
 
   delete (req, res, next) {
@@ -155,15 +209,11 @@ export default class FolloweesController extends ModelController {
       }
 
       var followerId = doc._id;
-      var currentDate = new Date();
 
       var followerFilters = {
         follower_id: followerId,
-        started: { $lt: currentDate },
-        ended: { $or: [
-          { $gt: currentDate },
-          { $eq: null }
-        ]}
+        started: { $lt: new Date() },
+        ended: null,
       };
 
       Following.find(followerFilters, 'followee_id', (err, docs) => {
