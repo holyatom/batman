@@ -221,7 +221,7 @@ export default class FolloweesController extends ModelController {
           return next(err);
         }
 
-        req.followeeIds = docs;
+        req.followeeIds = _.map(docs, (el) => el.followee_id);
 
         super.list(req, res, next);
       });
