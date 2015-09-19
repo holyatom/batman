@@ -29,6 +29,23 @@ Response:
 }
 ```
 
+### Count followers of a user
+
+Request for a specific user:
+```js
+GET /api/users/:username/followers/count
+```
+
+Request for an authorized user:
+```js
+GET /api/users/profile/followers/count
+```
+
+Response:
+```HTTP
+1
+```
+
 ### List users followed by another user
 
 Request for a specific user:
@@ -58,6 +75,23 @@ Response:
 }
 ```
 
+### Count users followed by another user
+
+Request for a specific user:
+```js
+GET /api/users/:username/following/count
+```
+
+Request for an authorized user:
+```js
+GET /api/users/profile/following/count
+```
+
+Response:
+```HTTP
+1
+```
+
 ### Check if one user follows another
 
 Request for a specific user:
@@ -81,9 +115,9 @@ Response in case user does not follow another:
 Status: 404 Not Found
 ```
 
-### Follow a user
+### Follow a user :lock:
 
-Request for an autorized user:
+Request:
 ```js
 PUT /api/users/profile/following/:username
 ```
@@ -99,9 +133,9 @@ Response in case target user does not exist:
 Status: 404 Not Found
 ```
 
-### Unfollow a user
+### Unfollow a user :lock:
 
-Request for an autorized user:
+Request:
 ```js
 DELETE /api/users/profile/following/:username
 ```

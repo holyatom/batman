@@ -1,3 +1,4 @@
 export default {
-  profile: true
+  profile: true,
+  count: true,
 }

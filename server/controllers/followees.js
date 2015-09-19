@@ -12,13 +12,16 @@ export default class FolloweesController extends ModelController {
     this.Model = User;
     this.listFields = 'username full_name image_url';
     this.auth = this;
-    this.actions = ['create', 'delete', 'get', 'list'];
+    this.actions = ['create', 'count', 'delete', 'get', 'list'];
 
     this.create.url = '/:followee_username';
 
     this.delete.url = '/:followee_username';
 
     this.get.url = '/:followee_username';
+
+    this.count.type = 'get';
+    this.count.url = '/count';
   }
 
   create (req, res, next) {
@@ -196,13 +199,9 @@ export default class FolloweesController extends ModelController {
         return this.notFound(res);
       }
 
-      var followerId = doc._id;
+      var follower_id = doc._id;
 
-      var filters = {
-        follower_id: followerId
-      };
-
-      Following.find(filters, 'followee_id', (err, docs) => {
+      Following.find({ follower_id }, 'followee_id', (err, docs) => {
         if (err) {
           return next(err);
         }
@@ -218,5 +217,33 @@ export default class FolloweesController extends ModelController {
     return {
       _id: { $in: req.followeeIds }
     };
+  }
+
+  count (req, res, next) {
+    var { username } = req.params;
+
+    if (username === 'profile') {
+      username = req.user.username;
+    }
+
+    User.findOne({username}, (err, doc) => {
+      if (err) {
+        return next(err);
+      }
+
+      if (!doc) {
+        return this.notFound(res);
+      }
+
+      var follower_id = doc._id;
+
+      Following.count({ follower_id }, (err, count) => {
+        if (err) {
+          return next(err);
+        }
+
+        res.send(count.toString());
+      });
+    });
   }
 }
