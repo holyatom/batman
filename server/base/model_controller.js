@@ -202,5 +202,8 @@ export default class ModelController extends Controller {
     if (contains(this.sortableFields, field)) {
       return req.query.order;
     }
+    else {
+      return '_id';
+    }
   }
 }
