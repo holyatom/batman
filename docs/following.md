@@ -71,13 +71,13 @@ GET /users/profile/following/:followee_username
 ```
 
 Response in case user follows another:
-```
+```HTTP
 Status: 204 No Content
 ```
 
 Response in case user does not follow another:
 
-```
+```HTTP
 Status: 404 Not Found
 ```
 
@@ -89,13 +89,13 @@ PUT /users/profile/following/:username
 ```
 
 Response in case of success:
-```
+```HTTP
 Status: 204 No Content
 ```
 
 Response in case target user does not exist:
 
-```
+```HTTP
 Status: 404 Not Found
 ```
 
@@ -107,12 +107,12 @@ DELETE /users/profile/following/:username
 ```
 
 Response in case of success:
-```
+```HTTP
 Status: 204 No Content
 ```
 
 Response in case target user does not exist:
 
-```
+```HTTP
 Status: 404 Not Found
 ```
