@@ -9,7 +9,7 @@ POST /api/users/profile/events
 {
   "description": "first event",
   "date": "Sat Sep 12 2015 20:02:19 GMT+0600",
-  "image_url": "http://image.jpg",
+  "image_urls": ["http://image.jpg"],
   "address": "Astana, Kazakhstan"
 }
 ```
@@ -22,6 +22,7 @@ Response:
     "created": "2015-09-12T14:22:30.726Z",
     "date": "2015-09-12T14:02:19.000Z",
     "description": "first event",
+    "image_urls": ["http://image.jpg"],
     "_id": "55f43526da3c9bb82a89db1b"
 }
 ```
@@ -45,6 +46,7 @@ Response:
       "user_id": "55ec39bd8c6037e000d4f365",
       "created": "2015-09-12T14:22:30.726Z",
       "date": "2015-09-12T14:02:19.000Z",
+      "image_urls": ["http://image.jpg"],
       "description": "first event",
       "__v": 0
       }
