@@ -12,6 +12,7 @@ export default class EventsController extends ModelController {
     this.auth = true;
     this.actions = ['create', 'list'];
     this.sortableFields = ['created'];
+    this.listFields = ['description', 'date', 'image_url', 'address', 'user_id', 'created'];
 
     this.create.type = 'post';
   }
