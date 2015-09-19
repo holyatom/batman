@@ -102,7 +102,7 @@ export default class ModelController extends Controller {
       .find(filters)
       .sort(order);
 
-    if (this.listFields == null) {
+    if (!this.listFields) {
       throw new Error('listFields value is not specified');
     }
 
