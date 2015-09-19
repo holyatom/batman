@@ -1,6 +1,6 @@
 ## User Following
 
-### List followers of a user
+### List followers of a user :lock:
 
 Request for a specific user:
 ```js
@@ -29,7 +29,7 @@ Response:
 }
 ```
 
-### Count followers of a user
+### Count followers of a user :lock:
 
 Request for a specific user:
 ```js
@@ -46,7 +46,7 @@ Response:
 1
 ```
 
-### List users followed by another user
+### List users followed by another user :lock:
 
 Request for a specific user:
 ```js
@@ -75,7 +75,7 @@ Response:
 }
 ```
 
-### Count users followed by another user
+### Count users followed by another user :lock:
 
 Request for a specific user:
 ```js
@@ -92,7 +92,7 @@ Response:
 1
 ```
 
-### Check if one user follows another
+### Check if one user follows another :lock:
 
 Request for a specific user:
 ```js

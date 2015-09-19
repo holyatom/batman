@@ -10,7 +10,7 @@ export default class FollowersController extends ModelController {
     this.logPrefix = 'followers-controller';
     this.urlPrefix = '/users/:username/followers';
     this.Model = User;
-    this.listFields = 'username full_name image_url';
+    this.listFields = ['username', 'full_name', 'image_url'];
     this.auth = true;
     this.actions = ['list', 'count'];
 

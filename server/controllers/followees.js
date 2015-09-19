@@ -10,7 +10,7 @@ export default class FolloweesController extends ModelController {
     this.logPrefix = 'followees-controller';
     this.urlPrefix = '/users/:username/following';
     this.Model = User;
-    this.listFields = 'username full_name image_url';
+    this.listFields = ['username', 'full_name', 'image_url'];
     this.auth = this;
     this.actions = ['create', 'count', 'delete', 'get', 'list'];
 

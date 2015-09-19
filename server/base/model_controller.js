@@ -80,11 +80,14 @@ export default class ModelController extends Controller {
 
   list (req, res, next) {
     var
-      order,
+      order = '_id',
       filters = {};
 
     if (req.query.order && this.sortableFields) {
-      order = this.getListOrder(req);
+      var clientOrder = this.getListOrder(req);
+      if (clientOrder) {
+        order = clientOrder;
+      }
     }
 
     if ((this.filterableFields || {}).length) {
@@ -99,9 +102,11 @@ export default class ModelController extends Controller {
       .find(filters)
       .sort(order);
 
-    if (this.listFields != null) {
-      query = query.select(this.listFields);
+    if (this.listFields == null) {
+      throw new Error('listFields value is not specified');
     }
+
+    query = query.select(this.listFields.join(' '));
 
     this.paginate(req, res, next, query, filters);
   }
@@ -201,9 +206,6 @@ export default class ModelController extends Controller {
 
     if (contains(this.sortableFields, field)) {
       return req.query.order;
-    }
-    else {
-      return '_id';
     }
   }
 }
