@@ -4,12 +4,12 @@
 
 Request for a specific user:
 ```js
-GET /users/:username/followers
+GET /api/users/:username/followers
 ```
 
 Request for an authorized user:
 ```js
-GET /users/profile/followers
+GET /api/users/profile/followers
 ```
 
 Response:
@@ -33,12 +33,12 @@ Response:
 
 Request for a specific user:
 ```js
-GET /users/:username/following
+GET /api/users/:username/following
 ```
 
 Request for an authorized user:
 ```js
-GET /users/profile/following
+GET /api/users/profile/following
 ```
 
 Response:
@@ -62,12 +62,12 @@ Response:
 
 Request for a specific user:
 ```js
-GET /users/:username/following/:followee_username
+GET /api/users/:username/following/:followee_username
 ```
 
 Request for an authorized user:
 ```js
-GET /users/profile/following/:followee_username
+GET /api/users/profile/following/:followee_username
 ```
 
 Response in case user follows another:
@@ -85,7 +85,7 @@ Status: 404 Not Found
 
 Request for an autorized user:
 ```js
-PUT /users/profile/following/:username
+PUT /api/users/profile/following/:username
 ```
 
 Response in case of success:
@@ -103,7 +103,7 @@ Status: 404 Not Found
 
 Request for an autorized user:
 ```js
-DELETE /users/profile/following/:username
+DELETE /api/users/profile/following/:username
 ```
 
 Response in case of success:
