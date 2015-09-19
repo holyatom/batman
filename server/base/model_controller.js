@@ -13,6 +13,7 @@ export default class ModelController extends Controller {
     this.Model = null;
     this.sortableFields = null;
     this.filterableFields = null;
+    this.listFields = null;
     this.auth = false;
 
     this.defaultPage = 1;
@@ -97,6 +98,10 @@ export default class ModelController extends Controller {
     var query = this.Model
       .find(filters)
       .sort(order);
+
+    if (this.listFields != null) {
+      query = query.select(this.listFields);
+    }
 
     this.paginate(req, res, next, query, filters);
   }

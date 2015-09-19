@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import ModelController from '../base/model_controller';
 import User from '../models/user';
 import Follower from '../models/following';
@@ -9,6 +10,7 @@ export default class FollowersController extends ModelController {
     this.logPrefix = 'followers-controller';
     this.urlPrefix = '/users/:username/followers';
     this.Model = User;
+    this.listFields = 'username full_name image_url';
     this.auth = true;
     this.actions = ['list'];
   }
@@ -32,21 +34,18 @@ export default class FollowersController extends ModelController {
       var followeeId = doc._id;
       var currentDate = new Date();
 
-      var followerFilters = {
+      var filters = {
         followee_id: followeeId,
         started: { $lt: currentDate },
-        ended: { $or: [
-          { $gt: currentDate },
-          { $eq: null }
-        ]}
+        ended: null,
       };
 
-      Follower.find(followerFilters, 'follower_id', (err, docs) => {
+      Follower.find(filters, 'follower_id', (err, docs) => {
         if (err) {
           return next(err);
         }
 
-        req.followerIds = docs;
+        req.followerIds = _.map(docs, (el) => el.follower_id);
 
         super.list(req, res, next);
       });

@@ -10,6 +10,7 @@ export default class FolloweesController extends ModelController {
     this.logPrefix = 'followees-controller';
     this.urlPrefix = '/users/:username/following';
     this.Model = User;
+    this.listFields = 'username full_name image_url';
     this.auth = this;
     this.actions = ['create', 'delete', 'get', 'list'];
 
@@ -210,13 +211,13 @@ export default class FolloweesController extends ModelController {
 
       var followerId = doc._id;
 
-      var followerFilters = {
+      var filters = {
         follower_id: followerId,
         started: { $lt: new Date() },
         ended: null,
       };
 
-      Following.find(followerFilters, 'followee_id', (err, docs) => {
+      Following.find(filters, 'followee_id', (err, docs) => {
         if (err) {
           return next(err);
         }
