@@ -119,7 +119,7 @@ Status: 404 Not Found
 
 Request:
 ```js
-PUT /api/users/profile/following/:username
+POST /api/users/profile/following/:username
 ```
 
 Response in case of success:
