@@ -11,13 +11,6 @@ var schema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: v.required()
   },
-  started: {
-    type: Date,
-    required: v.required()
-  },
-  ended: {
-    type: Date
-  }
 });
 
 export default mongoose.model('Following', schema);

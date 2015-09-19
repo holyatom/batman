@@ -14,7 +14,6 @@ export default class FolloweesController extends ModelController {
     this.auth = this;
     this.actions = ['create', 'delete', 'get', 'list'];
 
-    this.create.type = 'put';
     this.create.url = '/:followee_username';
 
     this.delete.url = '/:followee_username';
@@ -49,8 +48,6 @@ export default class FolloweesController extends ModelController {
         var following = new Following({
           follower_id: followerId,
           followee_id: followeeId,
-          started: new Date(),
-          ended: null,
         });
 
         following.validate((err) => {
@@ -61,8 +58,6 @@ export default class FolloweesController extends ModelController {
           var filter = {
             follower_id: followerId,
             followee_id: followeeId,
-            started: { $lt: new Date() },
-            ended: null,
           };
 
           Following.findOne(filter, (err, doc) => {
@@ -118,8 +113,6 @@ export default class FolloweesController extends ModelController {
         var filter = {
           follower_id: followerId,
           followee_id: followeeId,
-          started: { $lt: new Date() },
-          ended: null,
         };
 
         Following.findOne(filter, (err, doc) => {
@@ -165,8 +158,6 @@ export default class FolloweesController extends ModelController {
       var filter = {
         follower_id: followerId,
         followee_id: followeeId,
-        started: { $lt: new Date() },
-        ended: null,
       };
 
       Following.findOne(filter, (err, doc) => {
@@ -178,11 +169,7 @@ export default class FolloweesController extends ModelController {
           return this.error(res, 'not_followed', 409);
         }
 
-        doc.set({
-          ended: new Date(),
-        });
-
-        doc.save((err, doc) => {
+        Following.remove(doc, (err) => {
           if (err) {
             return next(err);
           }
@@ -212,9 +199,7 @@ export default class FolloweesController extends ModelController {
       var followerId = doc._id;
 
       var filters = {
-        follower_id: followerId,
-        started: { $lt: new Date() },
-        ended: null,
+        follower_id: followerId
       };
 
       Following.find(filters, 'followee_id', (err, docs) => {

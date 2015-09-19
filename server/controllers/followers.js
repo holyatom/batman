@@ -32,12 +32,9 @@ export default class FollowersController extends ModelController {
       }
 
       var followeeId = doc._id;
-      var currentDate = new Date();
 
       var filters = {
-        followee_id: followeeId,
-        started: { $lt: currentDate },
-        ended: null,
+        followee_id: followeeId
       };
 
       Follower.find(filters, 'follower_id', (err, docs) => {
