@@ -4,7 +4,7 @@ import _ from 'lodash';
 export default class Factory {
   constructor () {
     this.Model = null;
-    this.counter = -1;
+    this.counter = 0;
   }
 
   defaults () {
@@ -43,6 +43,7 @@ export default class Factory {
       return new this.Model(data).save();
     })
     .then((doc) => {
+      this.counter += 1;
       return this.postCreate(doc.toJSON());
     })
     .then((item) => {

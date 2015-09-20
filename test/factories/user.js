@@ -10,8 +10,6 @@ class UserFactory extends Factory {
   }
 
   defaults () {
-    this.counter += 1;
-
     return {
       username: `testuser${this.counter}`,
       password: 123456,
