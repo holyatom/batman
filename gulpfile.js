@@ -1,7 +1,6 @@
 var
   SYMLINKS,
   proxyLog,
-  proxy,
   createSymlink,
   pkg = require('./package.json'),
   gulp = require('gulp'),
@@ -36,7 +35,7 @@ gulp.task('symlink', function () {
 
 gulp.task('dev', function () {
   nodemon({
-    script: 'server/index.js',
+    script: 'index.js',
     exec: 'babel-node'
   });
 });
