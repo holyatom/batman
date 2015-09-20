@@ -23,20 +23,6 @@ createSymlink = function (key, path) {
     .pipe(symlink(path[1].trim() + '/' + key, { force: true }));
 };
 
-proxy = function (runner, callback) {
-  // end: false means when runner died, don't kill process stream
-  runner.stdout.pipe(process.stdout, { end: false });
-  runner.stderr.pipe(process.stderr, { end: false });
-
-  runner.on('exit', function (status) {
-    if (status === 0) {
-      if (callback) callback();
-    } else {
-      process.exit(status);
-    }
-  });
-};
-
 proxyLog = function (runner) {
   runner.stdout.on('data', function (data) { process.stdout.write(data.toString()); })
   runner.stderr.on('data', function (data) { process.stderr.write(data.toString()); })
@@ -55,9 +41,12 @@ gulp.task('dev', function () {
   });
 });
 
-gulp.task('mocha', function () {
-  var runner = exec('mocha');
-  proxy(runner);
+gulp.task('mocha', function (done) {
+  var runner = exec('env NODE_ENV=test mocha', function (err) {
+    done(err);
+  });
+
+  proxyLog(runner);
 });
 
 gulp.task('test', ['mocha']);

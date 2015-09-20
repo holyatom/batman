@@ -1,5 +1,5 @@
 import chai from 'chai';
-import { setup } from '../controller';
+import { setup } from 'test/controller';
 import PostController from 'server/controllers/posts';
 import { app } from 'server';
 

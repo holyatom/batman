@@ -4,25 +4,26 @@ import mongoose from 'mongoose';
 import config from 'config';
 import bodyParser from 'body-parser';
 import middlewares from '../server/middlewares';
-import log from 'libs/logger';
 import userFactory from 'test/factories/user';
+import { contains } from 'libs/utils';
 
 
 let database = function (cb) {
+  if (contains([1, 2], mongoose.connection.readyState)) {
+    return cb();
+  }
+
   mongoose.connect(`mongodb://${config.mongodb.host}/${config.mongodb.database}`);
 
   mongoose.connection.on('error', (error) => {
-    log('error', `mongodb operation failed: ${error}`);
+    console.log(`mongodb operation failed: ${error}`);
   });
 
   mongoose.connection.once('open', () => {
-    log('info', 'test database was connected');
-
     mongoose.connection.db.dropDatabase((err) => {
       if (err) {
-        log('error', 'mongodb wasn\'t cleared');
+        console.log('mongodb wasn\'t cleared');
       } else {
-        log('info', 'mongodb was successfully cleared');
         cb();
       }
     })
@@ -39,6 +40,7 @@ export function setup (app, ctrl, cb) {
   database(() => {
     userFactory.create((err, user) => {
       if (err) {
+        console.log(err);
         cb(err);
       } else {
         ctrl.user = user;
