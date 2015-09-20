@@ -5,6 +5,8 @@ before_install:
   - npm install babel -g
 install:
   - npm install
+before_script:
+  - gulp symlink
 script:
   - gulp test
 notifications:
