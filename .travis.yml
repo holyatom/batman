@@ -2,7 +2,7 @@ language: node_js
 node_js:
   - "0.12"
 before_script:
-  - sudo npm insall babel -g
+  - sudo npm install babel -g
 install:
   - npm install
 script:
