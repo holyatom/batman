@@ -123,9 +123,14 @@ export default class ModelController extends Controller {
     query
       .skip((page - 1) * perPage)
       .limit(perPage)
+      .lean()
       .exec((error, docs) => {
         if (error) {
           return next(error);
+        }
+
+        if (this.setAdditionalFields) {
+          this.setAdditionalFields(req, next, docs);
         }
 
         this.Model.count(filters, (error, count) => {

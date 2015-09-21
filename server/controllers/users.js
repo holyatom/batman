@@ -1,5 +1,7 @@
+import _ from 'lodash';
 import ModelController from '../base/model_controller';
 import User from '../models/user';
+import Following from '../models/following';
 
 
 export default class UsersController extends ModelController {
@@ -79,5 +81,45 @@ export default class UsersController extends ModelController {
 
   list (...args) {
     super.list(...args);
+  }
+
+  setAdditionalFields(req, next, users) {
+    var currentUserId = req.user._id;
+
+    var userIds = _.map(users, (user) => user._id);
+
+    var followeeFilter = {
+      follower_id: currentUserId,
+      followee_id: { $in: userIds }
+    };
+
+    Following.find(followeeFilter, 'followee_id', (err, followings) => {
+      if (err) {
+        return next(err);
+      }
+
+      var followeeIds = _.map(followings, (f) => f.followee_id);
+
+      _.forEach(users, (user) => {
+        user.is_followed = _.some(followeeIds, (id) => id.equals(user._id));
+      })
+    });
+
+    var followerFilter = {
+      followee_id: currentUserId,
+      follower_id: { $in: userIds }
+    };
+
+    Following.find(followerFilter, 'follower_id', (err, followings) => {
+      if (err) {
+        return next(err);
+      }
+
+      var followerIds = _.map(followings, (f) => f.follower_id);
+
+      _.forEach(users, (user) => {
+        user.is_following = _.some(followerIds, (id) => id.equals(user._id));
+      })
+    });
   }
 }
