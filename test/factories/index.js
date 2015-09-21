@@ -23,9 +23,9 @@ export default class Factory {
     return new Promise((resolve, reject) => resolve(item));
   }
 
-  create (data, cb) {
+  create (data, done) {
     if (_.isFunction(data)) {
-      cb = data;
+      done = data;
       data = {};
     }
 
@@ -47,10 +47,10 @@ export default class Factory {
       return this.postCreate(doc.toJSON());
     })
     .then((item) => {
-      if (cb) cb(null, item);
+      if (done) done(null, item);
     })
     .catch((err) => {
-      if (cb) cb(err);
+      if (done) done(err);
     });
   }
 }

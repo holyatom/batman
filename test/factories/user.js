@@ -14,7 +14,7 @@ class UserFactory extends Factory {
       username: `testuser${this.counter}`,
       password: 123456,
       created: new Date(),
-      full_name: 'Test User${this.counter}',
+      full_name: `Test User${this.counter}`,
       image_url: '/images/default_avatar.jpg',
     };
   }

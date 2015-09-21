@@ -23,8 +23,8 @@ createSymlink = function (key, path) {
 };
 
 proxyLog = function (runner) {
-  runner.stdout.on('data', function (data) { process.stdout.write(data.toString()); })
-  runner.stderr.on('data', function (data) { process.stderr.write(data.toString()); })
+  runner.stdout.on('data', function (data) { process.stdout.write(data.toString()); });
+  runner.stderr.on('data', function (data) { process.stderr.write(data.toString()); });
 };
 
 gulp.task('symlink', function () {

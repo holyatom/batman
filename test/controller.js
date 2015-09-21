@@ -8,9 +8,9 @@ import userFactory from 'test/factories/user';
 import { contains } from 'libs/utils';
 
 
-let database = function (cb) {
+let database = function (callback) {
   if (contains([1, 2], mongoose.connection.readyState)) {
-    return cb();
+    return callback();
   }
 
   mongoose.connect(`mongodb://${config.mongodb.host}/${config.mongodb.database}`);
@@ -24,13 +24,13 @@ let database = function (cb) {
       if (err) {
         console.log('mongodb wasn\'t cleared');
       } else {
-        cb();
+        callback();
       }
     })
   });
 };
 
-export function setup (app, ctrl, cb) {
+export function setup (app, ctrl, callback) {
   chai.use(chaiHttp);
   app.use(bodyParser.json());
   app.use(middlewares.lang);
@@ -41,10 +41,10 @@ export function setup (app, ctrl, cb) {
     userFactory.create((err, user) => {
       if (err) {
         console.log(err);
-        cb(err);
+        callback(err);
       } else {
         ctrl.user = user;
-        cb();
+        callback();
       }
     });
   });
