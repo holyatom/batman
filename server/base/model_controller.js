@@ -129,23 +129,30 @@ export default class ModelController extends Controller {
           return next(error);
         }
 
-        if (this.setAdditionalFields) {
-          this.setAdditionalFields(req, next, docs);
-        }
-
         this.Model.count(filters, (error, count) => {
           if (error) {
             return next(error);
           }
 
-          res.json({
-            total: count,
-            page: page,
-            per_page: perPage,
-            collection: docs
-          });
+          if (this.setAdditionalFields) {
+            this.setAdditionalFields(req, next, docs, () => {
+              this.respond(res, count, page, perPage, docs)
+            });
+          }
+          else {
+            this.respond(res, count, page, perPage, docs)
+          }
         });
       });
+  }
+
+  respond(res, count, page, perPage, docs) {
+    res.json({
+      total: count,
+      page: page,
+      per_page: perPage,
+      collection: docs
+    });
   }
 
   getPagination (req) {

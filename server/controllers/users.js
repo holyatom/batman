@@ -29,7 +29,7 @@ export default class UsersController extends ModelController {
       username = req.user.username;
     }
 
-    this.Model.findOne({ username }, (err, doc) => {
+    this.Model.findOne({ username }).lean().exec((err, doc) => {
       if (err) {
         return next(err);
       }
@@ -38,7 +38,35 @@ export default class UsersController extends ModelController {
         return this.notFound(res);
       }
 
-      return res.json(doc.toJSON());
+      var currentUserId = req.user._id;
+
+      var followeeFilter = {
+        follower_id: currentUserId,
+        followee_id: doc._id,
+      };
+
+      Following.findOne(followeeFilter, (err, followed) => {
+        if (err) {
+          return next(err);
+        }
+
+        doc.is_followed = !!followed;
+
+        var followerFilter = {
+          followee_id: currentUserId,
+          follower_id: doc._id,
+        };
+
+        Following.findOne(followerFilter, (err, following) => {
+          if (err) {
+            return next(err);
+          }
+
+          doc.is_following = !!following;
+
+          return res.json(doc);
+        });
+      });
     });
   }
 
@@ -83,14 +111,14 @@ export default class UsersController extends ModelController {
     super.list(...args);
   }
 
-  setAdditionalFields(req, next, users) {
+  setAdditionalFields(req, next, users, callback) {
     var currentUserId = req.user._id;
 
     var userIds = _.map(users, (user) => user._id);
 
     var followeeFilter = {
       follower_id: currentUserId,
-      followee_id: { $in: userIds }
+      followee_id: { $in: userIds },
     };
 
     Following.find(followeeFilter, 'followee_id', (err, followings) => {
@@ -102,24 +130,26 @@ export default class UsersController extends ModelController {
 
       _.forEach(users, (user) => {
         user.is_followed = _.some(followeeIds, (id) => id.equals(user._id));
-      })
-    });
+      });
 
-    var followerFilter = {
-      followee_id: currentUserId,
-      follower_id: { $in: userIds }
-    };
+      var followerFilter = {
+        followee_id: currentUserId,
+        follower_id: { $in: userIds },
+      };
 
-    Following.find(followerFilter, 'follower_id', (err, followings) => {
-      if (err) {
-        return next(err);
-      }
+      Following.find(followerFilter, 'follower_id', (err, followings) => {
+        if (err) {
+          return next(err);
+        }
 
-      var followerIds = _.map(followings, (f) => f.follower_id);
+        var followerIds = _.map(followings, (f) => f.follower_id);
 
-      _.forEach(users, (user) => {
-        user.is_following = _.some(followerIds, (id) => id.equals(user._id));
-      })
+        _.forEach(users, (user) => {
+          user.is_following = _.some(followerIds, (id) => id.equals(user._id));
+        });
+
+        callback();
+      });
     });
   }
 }
