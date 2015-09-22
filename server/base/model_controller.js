@@ -123,7 +123,8 @@ export default class ModelController extends Controller {
     query
       .skip((page - 1) * perPage)
       .limit(perPage)
-      .exec((error, docs) => {
+      .lean()
+      .exec((error, collection) => {
         if (error) {
           return next(error);
         }
@@ -133,12 +134,14 @@ export default class ModelController extends Controller {
             return next(error);
           }
 
-          res.json({
-            total: count,
-            page: page,
-            per_page: perPage,
-            collection: docs
-          });
+          if (this.setAdditionalFields) {
+            this.setAdditionalFields(req, next, collection, () => {
+              res.json({ total: count, page, per_page: perPage, collection });
+            });
+          }
+          else {
+            res.json({ total: count, page, per_page: perPage, collection });
+          }
         });
       });
   }
