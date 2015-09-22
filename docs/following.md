@@ -42,8 +42,10 @@ GET /api/users/profile/followers/count
 ```
 
 Response:
-```HTTP
-1
+```json
+{
+  "count": 1
+}
 ```
 
 ### List users followed by another user :lock:
@@ -88,8 +90,10 @@ GET /api/users/profile/following/count
 ```
 
 Response:
-```HTTP
-1
+```json
+{
+  "count": 1
+}
 ```
 
 ### Check if one user follows another :lock:
@@ -105,8 +109,10 @@ GET /api/users/profile/following/:followee_username
 ```
 
 Response in case user follows another:
-```HTTP
-Status: 204 No Content
+```json
+{
+  "success": true
+}
 ```
 
 Response in case user does not follow another:
@@ -123,8 +129,10 @@ POST /api/users/profile/following/:username
 ```
 
 Response in case of success:
-```HTTP
-Status: 204 No Content
+```json
+{
+  "success": true
+}
 ```
 
 Response in case target user does not exist:
@@ -141,8 +149,10 @@ DELETE /api/users/profile/following/:username
 ```
 
 Response in case of success:
-```HTTP
-Status: 204 No Content
+```json
+{
+  "success": true
+}
 ```
 
 Response in case target user does not exist:
