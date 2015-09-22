@@ -77,7 +77,7 @@ export default class FolloweesController extends ModelController {
                 return next(err);
               }
 
-              res.status(204).end();
+              res.json({ success: true });
             });
           });
         });
@@ -124,7 +124,7 @@ export default class FolloweesController extends ModelController {
           }
 
           if (doc) {
-            return res.status(204).end();
+            res.json({ success: true });
           }
           else {
             return this.notFound(res);
@@ -177,7 +177,7 @@ export default class FolloweesController extends ModelController {
             return next(err);
           }
 
-          res.status(204).end();
+          res.json({ success: true });
         });
       });
     });
@@ -242,7 +242,7 @@ export default class FolloweesController extends ModelController {
           return next(err);
         }
 
-        res.send(count.toString());
+        res.json({ count });
       });
     });
   }

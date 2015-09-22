@@ -77,7 +77,7 @@ export default class FollowersController extends ModelController {
           return next(err);
         }
 
-        res.send(count.toString());
+        res.json({ count });
       });
     });
   }
