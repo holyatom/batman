@@ -4,7 +4,6 @@ import ModelController from '../base/model_controller';
 import User from '../models/user';
 
 
-
 export default class AuthController extends ModelController {
   constructor () {
     super();
@@ -16,7 +15,7 @@ export default class AuthController extends ModelController {
     this.login.type = 'post';
   }
 
-  _generateToken (user) {
+  generateToken (user) {
     var
       expires = new Date(),
       claims = {
@@ -55,7 +54,7 @@ export default class AuthController extends ModelController {
 
       if (doc && doc.comparePassword(password)) {
         var item = doc.toJSON();
-        item.token = this._generateToken(doc);
+        item.token = this.generateToken(item);
         res.json(item);
       } else {
         return this.error(res, { username: 'wrong_login_or_password' });;

@@ -92,4 +92,4 @@ class Server {
   }
 }
 
-new Server().run();
+export default new Server();
