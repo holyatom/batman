@@ -11,8 +11,8 @@ var schema = new mongoose.Schema({
     type: String,
     required: v.required()
   },
-  image_url: {
-    type: String
+  image_urls: {
+    type: [String]
   },
   user_id: {
     type: mongoose.Schema.Types.ObjectId,

@@ -11,8 +11,8 @@ var schema = new mongoose.Schema({
     type: Date,
     required: v.required()
   },
-  image_url: {
-    type: String
+  image_urls: {
+    type: [String]
   },
   address: {
     type: String,
