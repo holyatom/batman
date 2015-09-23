@@ -46,6 +46,29 @@ Api server
 
 6. PROFIT
 
+## Running tests
+Tests run with [mocha](http://visionmedia.github.io/mocha/) using [chai](http://chaijs.com) as an assertion library.
+
+For development purposes it's recommended to have mocha installed globally:
+
+  `sudo npm -g install mocha`
+
+Then you can run tests like this:
+
+  `mocha test/suite/*`
+
+Otherwise you can run tests via cake to use local mocha installation:
+
+  `gulp test`
+
+And don't forget to try out different reporters:
+
+  `mocha test/suite/* --reporter nyan`
+
+## Writing tests
+Tests are located in the `test/suite` folder. To add a new test to the suite create a new js file and write your stuff.
+
+If you never used mocha or chai before, here are the docs for those: [mocha docs](http://visionmedia.github.io/mocha/), [chai bdd](http://chaijs.com/api/bdd/).
 
 ### Sublime settings
 If you use Sublime, here's a recommended config:
