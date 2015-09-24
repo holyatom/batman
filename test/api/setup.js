@@ -8,14 +8,14 @@ import { contains } from 'libs/utils';
 import Controller from 'server/base/controller';
 
 
-let database = function (callback) {
+let database = callback => {
   if (contains([1, 2], mongoose.connection.readyState)) {
     return callback();
   }
 
   mongoose.connect(`mongodb://${config.mongodb.host}/${config.mongodb.database}`);
 
-  mongoose.connection.on('error', (error) => {
+  mongoose.connection.on('error', error => {
     console.log(`mongodb operation failed: ${error}`);
   });
 
@@ -32,6 +32,7 @@ let database = function (callback) {
 
 export function setup (server, app, done) {
   chai.use(chaiHttp);
+  chai.should();
 
   app.use(bodyParser.json());
   app.use(middlewares.lang);
