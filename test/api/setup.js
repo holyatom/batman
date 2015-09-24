@@ -43,4 +43,4 @@ export function setup (server, app, done) {
   server.initControllers();
 
   database(() => done());
-};
+}
