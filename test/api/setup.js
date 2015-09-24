@@ -1,11 +1,11 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import mongoose from 'mongoose';
-import config from 'config';
 import bodyParser from 'body-parser';
-import middlewares from '../server/middlewares';
-import userFactory from 'test/factories/user';
+import config from 'config';
+import middlewares from 'server/middlewares';
 import { contains } from 'libs/utils';
+import Controller from 'server/base/controller';
 
 
 let database = function (callback) {
@@ -30,22 +30,16 @@ let database = function (callback) {
   });
 };
 
-export function setup (app, ctrl, callback) {
+export function setup (server, app, done) {
   chai.use(chaiHttp);
+
   app.use(bodyParser.json());
   app.use(middlewares.lang);
   app.use(middlewares.jwt);
-  ctrl.use(app);
 
-  database(() => {
-    userFactory.create((err, user) => {
-      if (err) {
-        console.log(err);
-        callback(err);
-      } else {
-        ctrl.user = user;
-        callback();
-      }
-    });
-  });
+  Controller.prototype.log = (type, message) => { /* suppress logging */ };
+
+  server.initControllers();
+
+  database(() => done());
 };
