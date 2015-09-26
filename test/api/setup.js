@@ -6,6 +6,7 @@ import config from 'config';
 import middlewares from 'server/middlewares';
 import { contains } from 'libs/utils';
 import Controller from 'server/base/controller';
+import userFactory from './factories/user';
 
 
 let database = callback => {
@@ -30,7 +31,7 @@ let database = callback => {
   });
 };
 
-export function setup (server, app, done) {
+export function setup (server, app, env, done) {
   chai.use(chaiHttp);
   chai.should();
 
@@ -42,5 +43,15 @@ export function setup (server, app, done) {
 
   server.initControllers();
 
-  database(() => done());
+  database(() => {
+    userFactory.create(app, null, (err, user) => {
+      if (err) {
+        console.log(err);
+        done(err);
+      } else {
+        env.user = user;
+        done();
+      }
+    });
+  });
 }
