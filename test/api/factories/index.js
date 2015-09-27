@@ -20,8 +20,8 @@ export default class Factory {
     return new Promise((resolve, reject) => resolve(data));
   }
 
-  postCreate (req, res) {
-    return new Promise((resolve, reject) => resolve(res));
+  postCreate (req, resBody) {
+    return new Promise((resolve, reject) => resolve(resBody));
   }
 
   create (app, data, done) {

@@ -134,9 +134,12 @@ export default class ModelController extends Controller {
             return next(error);
           }
 
+          page = +page;
+          perPage = +perPage;
+
           if (this.setAdditionalFields) {
             this.setAdditionalFields(req, next, collection, () => {
-              res.json({ total: count, page: +page, per_page: +perPage, collection });
+              res.json({ total: count, page, per_page: perPage, collection });
             });
           }
           else {

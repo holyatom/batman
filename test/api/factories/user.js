@@ -18,10 +18,10 @@ class UserFactory extends Factory {
     };
   }
 
-  postCreate (req, res) {
+  postCreate (req, resBody) {
     return new Promise((resolve, reject) => {
-      res.token = Auth.prototype.generateToken(res);
-      resolve(res);
+      resBody.token = Auth.prototype.generateToken(resBody);
+      resolve(resBody);
     });
   }
 }
