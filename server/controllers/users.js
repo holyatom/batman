@@ -12,7 +12,7 @@ export default class UsersController extends ModelController {
     this.Model = User;
     this.actions = ['create', 'get', 'list'];
     this.filterableFields = ['username'];
-    this.listFields = ['username', 'created', 'full_name', 'image_url'];
+    this.listFields = ['username', 'created', 'full_name', 'image_url', '__v'];
 
     this.create.type = 'post';
 

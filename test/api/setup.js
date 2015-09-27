@@ -1,21 +1,22 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import mongoose from 'mongoose';
-import config from 'config';
 import bodyParser from 'body-parser';
-import middlewares from '../server/middlewares';
-import userFactory from 'test/factories/user';
+import config from 'config';
+import middlewares from 'server/middlewares';
 import { contains } from 'libs/utils';
+import Controller from 'server/base/controller';
+import userFactory from './factories/user';
 
 
-let database = function (callback) {
+let database = callback => {
   if (contains([1, 2], mongoose.connection.readyState)) {
-    return callback();
+    mongoose.connection.close();
   }
 
   mongoose.connect(`mongodb://${config.mongodb.host}/${config.mongodb.database}`);
 
-  mongoose.connection.on('error', (error) => {
+  mongoose.connection.on('error', error => {
     console.log(`mongodb operation failed: ${error}`);
   });
 
@@ -30,22 +31,36 @@ let database = function (callback) {
   });
 };
 
-export function setup (app, ctrl, callback) {
+export function setup (server, done) {
+
+  if (config.env !== 'test') {
+    throw new Error('Tests must be run with NODE_ENV set to \'test\'');
+  }
+
   chai.use(chaiHttp);
+  chai.should();
+
+  var app = server.app;
+  var env = app.env = {};
+
   app.use(bodyParser.json());
   app.use(middlewares.lang);
   app.use(middlewares.jwt);
-  ctrl.use(app);
+
+  // suppress logging
+  Controller.prototype.log = (type, message) => {};
+
+  server.initControllers();
 
   database(() => {
-    userFactory.create((err, user) => {
+    userFactory.create(app, null, (err, user) => {
       if (err) {
         console.log(err);
-        callback(err);
+        done(err);
       } else {
-        ctrl.user = user;
-        callback();
+        env.user = user;
+        done();
       }
     });
   });
-};
+}

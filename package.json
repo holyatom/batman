@@ -33,6 +33,7 @@
     "gulp": "^3.9.0",
     "gulp-nodemon": "^2.0.3",
     "gulp-symlink": "^2.1.2",
-    "mocha": "^2.3.2"
+    "mocha": "^2.3.2",
+    "supertest": "^1.1.0"
   }
 }

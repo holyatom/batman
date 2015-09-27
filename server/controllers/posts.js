@@ -12,7 +12,7 @@ export default class PostsController extends ModelController {
     this.auth = true;
     this.actions = ['create', 'list'];
     this.sortableFields = ['created'];
-    this.listFields = ['description', 'address', 'image_url', 'user_id', 'created'];
+    this.listFields = ['description', 'address', 'image_urls', 'user_id', 'created', '__v'];
 
     this.create.type = 'post';
   }

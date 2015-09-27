@@ -1,4 +1,5 @@
-import Factory from 'test/factories';
+import _ from 'lodash';
+import Factory from 'test/api/factories';
 import User from 'server/models/user';
 import Auth from 'server/controllers/auth';
 
@@ -6,23 +7,21 @@ import Auth from 'server/controllers/auth';
 class UserFactory extends Factory {
   constructor () {
     super();
-    this.Model = User;
+    this.postUrl = '/api/users';
   }
 
   defaults () {
     return {
       username: `testuser${this.counter}`,
-      password: 123456,
-      created: new Date(),
-      full_name: `Test User${this.counter}`,
-      image_url: '/images/default_avatar.jpg',
+      password: '123456',
+      full_name: `Test User${this.counter}`
     };
   }
 
-  postCreate (item) {
+  postCreate (req, resBody) {
     return new Promise((resolve, reject) => {
-      item.token = Auth.prototype.generateToken(item);
-      resolve(item);
+      resBody.token = Auth.prototype.generateToken(resBody);
+      resolve(resBody);
     });
   }
 }
