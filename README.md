@@ -55,7 +55,7 @@ For development purposes it's recommended to have mocha installed globally:
 
 Then you can run tests like this:
 
-  `mocha test/suite/*`
+  `env NODE_ENV=test mocha test/api/tests/*`
 
 Otherwise you can run tests via cake to use local mocha installation:
 
@@ -63,10 +63,10 @@ Otherwise you can run tests via cake to use local mocha installation:
 
 And don't forget to try out different reporters:
 
-  `mocha test/suite/* --reporter nyan`
+  `env NODE_ENV=test mocha test/api/tests/* --reporter nyan`
 
 ## Writing tests
-Tests are located in the `test/suite` folder. To add a new test to the suite create a new js file and write your stuff.
+API tests are located in the `test/api/tests` folder. To add a new test to the suite create a new js file and write your stuff.
 
 If you never used mocha or chai before, here are the docs for those: [mocha docs](http://visionmedia.github.io/mocha/), [chai bdd](http://chaijs.com/api/bdd/).
 
