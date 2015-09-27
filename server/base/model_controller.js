@@ -136,7 +136,7 @@ export default class ModelController extends Controller {
 
           if (this.setAdditionalFields) {
             this.setAdditionalFields(req, next, collection, () => {
-              res.json({ total: count, page, per_page: perPage, collection });
+              res.json({ total: count, page: +page, per_page: +perPage, collection });
             });
           }
           else {
@@ -155,6 +155,20 @@ export default class ModelController extends Controller {
 
   validatePagination (page, perPage) {
     var error = {};
+
+    page = parseInt('' + page, 10);
+    if (isNaN(page)) {
+      error.page = 'bad_int_value';
+    }
+
+    perPage = parseInt('' + perPage, 10);
+    if (isNaN(perPage)) {
+      error.per_page = 'bad_int_value';
+    }
+
+    if (!_.isEmpty(error)) {
+      return error;
+    }
 
     if (perPage <= 0) {
       error.per_page = 'less_than_allowed';
