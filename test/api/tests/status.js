@@ -1,15 +1,15 @@
 import chai from 'chai';
-import server, { app } from 'server';
+import server from 'server';
 import { setup } from '../setup';
 
 
 describe('API status', () => {
   before(done => {
-    setup(server, app, {}, () => done());
+    setup(server, () => done());
   });
 
   it('GET /api/status should return batman saying', done => {
-    chai.request(app)
+    chai.request(server.app)
       .get('/api/status')
       .then(res => {
         res.status.should.equal(200);

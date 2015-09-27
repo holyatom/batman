@@ -31,9 +31,17 @@ let database = callback => {
   });
 };
 
-export function setup (server, app, env, done) {
+export function setup (server, done) {
+
+  if (config.env !== 'test') {
+    throw new Error('Tests must be run with NODE_ENV set to \'test\'');
+  }
+
   chai.use(chaiHttp);
   chai.should();
+
+  var app = server.app;
+  var env = app.env = {};
 
   app.use(bodyParser.json());
   app.use(middlewares.lang);

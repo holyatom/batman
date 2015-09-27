@@ -1,10 +1,9 @@
 import chai from 'chai';
-import server, { app } from 'server';
+import server from 'server';
 import { setup } from '../setup';
 
 
 let url = '/api/users/:username/posts';
-let env = {};
 
 let post = {
   description: 'Tea party',
@@ -16,11 +15,12 @@ let createdPost;
 
 describe('Posts API', () => {
   before(done => {
-    setup(server, app, env, () => done());
+    setup(server, () => done());
   });
 
   it('POST /api/users/profile/posts should create and return post of current user', done => {
-    chai.request(app)
+    var env = server.app.env;
+    chai.request(server.app)
       .post(url.replace(':username', 'profile'))
       .set('X-Access-Token', env.user.token.value)
       .send(post)
@@ -41,7 +41,8 @@ describe('Posts API', () => {
   });
 
   it('GET /api/users/:username/posts should return list of user posts', done => {
-    chai.request(app)
+    var env = server.app.env;
+    chai.request(server.app)
       .get(url.replace(':username', env.user.username))
       .set('X-Access-Token', env.user.token.value)
       .then(res => {

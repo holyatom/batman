@@ -1,10 +1,9 @@
 import chai from 'chai';
-import server, { app } from 'server';
+import server from 'server';
 import { setup } from '../setup';
 
 
 let url = '/api/users/:username/events';
-let env = {};
 
 let event = {
   description: 'Vodka party',
@@ -17,11 +16,12 @@ let createdEvent;
 
 describe('Events API', () => {
   before(done => {
-    setup(server, app, env, () => done());
+    setup(server, () => done());
   });
 
   it('POST /api/users/profile/events should create and return event of current user', done => {
-    chai.request(app)
+    var env = server.app.env;
+    chai.request(server.app)
       .post(url.replace(':username', 'profile'))
       .set('X-Access-Token', env.user.token.value)
       .send(event)
@@ -43,7 +43,8 @@ describe('Events API', () => {
   });
 
   it('GET /api/users/:username/events should return list of future user events', done => {
-    chai.request(app)
+    var env = server.app.env;
+    chai.request(server.app)
       .get(url.replace(':username', env.user.username))
       .set('X-Access-Token', env.user.token.value)
       .then(res => {

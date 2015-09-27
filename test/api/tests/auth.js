@@ -1,5 +1,5 @@
 import chai from 'chai';
-import server, { app } from 'server';
+import server from 'server';
 import { setup } from '../setup';
 
 
@@ -8,11 +8,12 @@ let env = {};
 
 describe('Auth API', () => {
   before(done => {
-    setup(server, app, env, () => done());
+    setup(server, () => done());
   });
 
   it('POST /api/auth should authenticate and return user', done => {
-    chai.request(app)
+    var env = server.app.env;
+    chai.request(server.app)
       .post(url)
       .send({
         username: env.user.username,
