@@ -14,9 +14,7 @@ let user = {
 let createdUser;
 
 describe('Users API', () => {
-  before(done => {
-    setup(server, () => done());
-  });
+  before(done => setup(server, done));
 
   it('POST /api/users should create and return user', done => {
     chai.request(server.app)

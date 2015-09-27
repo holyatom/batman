@@ -7,9 +7,7 @@ let url = '/api/auth';
 let env = {};
 
 describe('Auth API', () => {
-  before(done => {
-    setup(server, () => done());
-  });
+  before(done => setup(server, done));
 
   it('POST /api/auth should authenticate and return user', done => {
     var env = server.app.env;

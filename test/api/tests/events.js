@@ -8,16 +8,14 @@ let url = '/api/users/:username/events';
 let event = {
   description: 'Vodka party',
   date: '2052-09-12T14:02:19.000Z',
-  image_urls: ['http://image.jpg'],
+  image_urls: ['http://fight.jpg'],
   address: 'Park, bench',
 };
 
 let createdEvent;
 
 describe('Events API', () => {
-  before(done => {
-    setup(server, () => done());
-  });
+  before(done => setup(server, done));
 
   it('POST /api/users/profile/events should create and return event of current user', done => {
     var env = server.app.env;

@@ -4,9 +4,7 @@ import { setup } from '../setup';
 
 
 describe('API status', () => {
-  before(done => {
-    setup(server, () => done());
-  });
+  before(done => setup(server, done));
 
   it('GET /api/status should return batman saying', done => {
     chai.request(server.app)

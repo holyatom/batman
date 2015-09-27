@@ -7,16 +7,14 @@ let url = '/api/users/:username/posts';
 
 let post = {
   description: 'Tea party',
-  image_urls: ['http://image.jpg'],
-  address: 'London, castle',
+  image_urls: ['http://boredom.jpg'],
+  address: 'London, The Castle',
 };
 
 let createdPost;
 
 describe('Posts API', () => {
-  before(done => {
-    setup(server, () => done());
-  });
+  before(done => setup(server, done));
 
   it('POST /api/users/profile/posts should create and return post of current user', done => {
     var env = server.app.env;
