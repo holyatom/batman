@@ -11,7 +11,7 @@ import userFactory from './factories/user';
 
 let database = callback => {
   if (contains([1, 2], mongoose.connection.readyState)) {
-    return callback();
+    mongoose.connection.close();
   }
 
   mongoose.connect(`mongodb://${config.mongodb.host}/${config.mongodb.database}`);

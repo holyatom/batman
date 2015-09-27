@@ -39,7 +39,9 @@ Response:
   "created": "2015-09-04T21:18:23.681Z",
   "username": "atomiomi",
   "__v": 0,
-  "image_url": "/images/default_avatar.jpg"
+  "image_url": "/images/default_avatar.jpg",
+  "full_name": "Atomiomi",
+  "is_followed": false
 }
 ```
 
@@ -54,10 +56,38 @@ Response:
 ```json
 {
   "_id": "55ea0a9f95164eb41cec6d51",
+  "__v": 0,
   "created": "2015-09-04T21:18:23.681Z",
   "username": "atomiomi",
-  "__v": 0,
-  "image_url": "/images/default_avatar.jpg"
+  "image_url": "/images/default_avatar.jpg",
+  "full_name": "Atomiomi",
+  "is_followed": false
 }
 ```
 
+### Get list of users :lock:
+
+Request:
+```json
+GET /api/users
+```
+
+Response:
+```json
+{
+  "total": 1,
+  "page": 1,
+  "per_page": 20,
+  "collection": [
+    {
+      "_id": "55ea0a9f95164eb41cec6d51",
+      "__v": 0,
+      "created": "2015-09-04T21:18:23.681Z",
+      "username": "atomiomi",
+      "image_url": "/images/default_avatar.jpg",
+      "full_name": "Atomiomi",
+      "is_followed": false
+    }
+  ]
+}
+```
