@@ -12,8 +12,6 @@ let event = {
   address: 'Park, bench',
 };
 
-let createdEvent;
-
 describe('Events API', () => {
   before(done => setup(server, done));
 
@@ -24,7 +22,7 @@ describe('Events API', () => {
       .set('X-Access-Token', env.user.token.value)
       .send(event)
       .then(res => {
-        createdEvent = res.body;
+        env.createdEvent = res.body;
 
         res.status.should.equal(200);
         res.body.__v.should.equal(0);
@@ -34,7 +32,9 @@ describe('Events API', () => {
         res.body.image_urls.should.deep.equal(event.image_urls);
         res.body.address.should.equal(event.address);
         res.body._id.should.exist;
-        res.body.created.should.exist;
+        var created = +(new Date(res.body.created));
+        var now = +(new Date());
+        created.should.be.closeTo(now, 1000);
         done();
       })
       .catch(err => done(err));
@@ -51,7 +51,7 @@ describe('Events API', () => {
         res.body.page.should.equal(1);
         res.body.per_page.should.equal(20);
         res.body.collection.length.should.equal(1);
-        res.body.collection[0].should.deep.equal(createdEvent);
+        res.body.collection[0].should.deep.equal(env.createdEvent);
         done();
       })
       .catch(err => done(err));

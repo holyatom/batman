@@ -28,7 +28,9 @@ describe('Users API', () => {
         res.body.full_name.should.equal(user.full_name);
         res.body.image_url.should.equal('/images/default_avatar.jpg');
         res.body._id.should.exist;
-        res.body.created.should.exist;
+        var created = +(new Date(res.body.created));
+        var now = +(new Date());
+        created.should.be.closeTo(now, 1000);
         done();
       })
       .catch(err => done(err));

@@ -20,7 +20,6 @@ class UserFactory extends Factory {
 
   postCreate (req, res) {
     return new Promise((resolve, reject) => {
-      _.assign(res, req);
       res.token = Auth.prototype.generateToken(res);
       resolve(res);
     });

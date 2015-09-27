@@ -11,8 +11,6 @@ let post = {
   address: 'London, The Castle',
 };
 
-let createdPost;
-
 describe('Posts API', () => {
   before(done => setup(server, done));
 
@@ -23,7 +21,7 @@ describe('Posts API', () => {
       .set('X-Access-Token', env.user.token.value)
       .send(post)
       .then(res => {
-        createdPost = res.body;
+        env.createdPost = res.body;
 
         res.status.should.equal(200);
         res.body.__v.should.equal(0);
@@ -32,7 +30,9 @@ describe('Posts API', () => {
         res.body.image_urls.should.deep.equal(post.image_urls);
         res.body.address.should.equal(post.address);
         res.body._id.should.exist;
-        res.body.created.should.exist;
+        var created = +(new Date(res.body.created));
+        var now = +(new Date());
+        created.should.be.closeTo(now, 1000);
         done();
       })
       .catch(err => done(err));
@@ -49,7 +49,7 @@ describe('Posts API', () => {
         res.body.page.should.equal(1);
         res.body.per_page.should.equal(20);
         res.body.collection.length.should.equal(1);
-        res.body.collection[0].should.deep.equal(createdPost);
+        res.body.collection[0].should.deep.equal(env.createdPost);
         done();
       })
       .catch(err => done(err));

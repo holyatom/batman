@@ -47,7 +47,8 @@ export function setup (server, done) {
   app.use(middlewares.lang);
   app.use(middlewares.jwt);
 
-  Controller.prototype.log = (type, message) => { /* suppress logging */ };
+  // suppress logging
+  Controller.prototype.log = (type, message) => {};
 
   server.initControllers();
 
