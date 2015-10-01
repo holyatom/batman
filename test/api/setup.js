@@ -7,6 +7,7 @@ import middlewares from 'server/middlewares';
 import { contains } from 'libs/utils';
 import Controller from 'server/base/controller';
 import userFactory from './factories/user';
+import errorhandler from 'errorhandler';
 
 
 let database = callback => {
@@ -51,6 +52,11 @@ export function setup (server, done) {
   Controller.prototype.log = (type, message) => {};
 
   server.initControllers();
+
+  app.use((err, req, res, next) => {
+    this.log('error', err.stack || err);
+    next();
+  });
 
   database(() => {
     userFactory.create(app, null, (err, user) => {

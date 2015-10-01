@@ -15,7 +15,7 @@ export default class FollowersController extends UsersController {
       Following.find({ followee_id: item._id }).lean().exec((err, collection) => {
         if (err) return next(err);
 
-        req.followerIds = _.map(collection, el => el.follower_id);
+        req.followerIds = _.pluck(collection, 'follower_id');
         super.list(req, res, next);
       });
     });

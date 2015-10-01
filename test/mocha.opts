@@ -1,5 +1,4 @@
 --compilers js:babel/register
---colors
 --ui tdd
 --reporter spec
 --debug

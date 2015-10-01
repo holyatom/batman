@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import Q from 'q';
 import { contains } from 'libs/utils';
+import ValidationError from 'libs/errors/validation_error';
 import Controller from './controller';
 import middlewares from '../middlewares';
 
@@ -63,7 +64,18 @@ export default class ModelController extends Controller {
   }
 
   list (req, res, next) {
-    let opts = this.getListOptions(req);
+    let opts;
+    try {
+      opts = this.getListOptions(req);
+    }
+    catch (err) {
+      if (err instanceof ValidationError) {
+        return this.error(res, err.getError());
+      }
+      else {
+        throw err;
+      }
+    }
 
     let countQuery = this.Model.count(opts.filter);
     let query = this.Model
@@ -106,19 +118,18 @@ export default class ModelController extends Controller {
 
   getListOptions (req) {
     let pagination = this.getPagination(req);
+    this.validate(pagination);
+
     let opts = {
       order: '_id',
       select: '',
       filter: {},
-      page: this.defaultPage,
-      perPage: this.defaultPerPage,
+      page: +pagination.page,
+      perPage: +pagination.perPage,
     };
 
-    if (pagination.page) opts.page = +pagination.page;
-    if (pagination.page) opts.perPage = +pagination.perPage;
-
     if (req.query.order && this.sortableFields) {
-      opts.order = this.getListOrder(req) || order;
+      opts.order = this.getListOrder(req) || opts.order;
     }
 
     if ((this.filterableFields || []).length) {
@@ -135,8 +146,44 @@ export default class ModelController extends Controller {
   }
 
   getPagination (req) {
-    let { page, per_page } = req.query;
-    return { page, perPage: per_page };
+    let page = req.query.page || this.defaultPage;
+    let perPage = req.query.per_page || this.defaultPerPage;
+
+    return { page, perPage};
+  }
+
+  validate (pagination) {
+    let { page, perPage } = pagination;
+    let error = {};
+
+    page = parseInt('' + page, 10);
+    if (isNaN(page)) {
+      error.page = 'bad_int_value';
+    }
+
+    perPage = parseInt('' + perPage, 10);
+    if (isNaN(perPage)) {
+      error.per_page = 'bad_int_value';
+    }
+
+    if (!_.isEmpty(error)) {
+      throw new ValidationError(error);
+    }
+
+    if (perPage <= 0) {
+      error.per_page = 'less_than_allowed';
+    }
+    else if (perPage > this.maxPerPage) {
+      error.per_page = 'more_than_allowed';
+    }
+
+    if (page <= 0) {
+      error.page = 'less_than_allowed';
+    }
+
+    if (!_.isEmpty(error)) {
+      throw new ValidationError(error);
+    }
   }
 
   getListFilters (req) {
