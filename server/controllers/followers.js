@@ -1,84 +1,53 @@
 import _ from 'lodash';
-import ModelController from '../base/model_controller';
-import User from '../models/user';
+import UsersController from './users';
 import Following from '../models/following';
 
 
-export default class FollowersController extends ModelController {
-  constructor() {
-    super();
-    this.logPrefix = 'followers-controller';
-    this.urlPrefix = '/users/:username/followers';
-    this.Model = User;
-    this.listFields = ['username', 'full_name', 'image_url'];
-    this.auth = true;
-    this.actions = ['list', 'count'];
-
-    this.count.type = 'get';
-    this.count.url = '/count';
-  }
-
+export default class FollowersController extends UsersController {
   list (req, res, next) {
-    var { username } = req.params;
+    let { username } = req.params;
+    if (username === 'profile') username = req.user.username;
 
-    if (username === 'profile') {
-      username = req.user.username;
-    }
+    this.Model.findOne({ username }).lean().exec((err, item) => {
+      if (err) return next(err);
+      if (!item) return this.notFound(res);
 
-    User.findOne({ username }, (err, doc) => {
-      if (err) {
-        return next(err);
-      }
+      Following.find({ followee_id: item._id }).lean().exec((err, collection) => {
+        if (err) return next(err);
 
-      if (!doc) {
-        return this.notFound(res);
-      }
-
-      var followee_id = doc._id;
-
-      Following.find({ followee_id }, 'follower_id', (err, docs) => {
-        if (err) {
-          return next(err);
-        }
-
-        req.followerIds = _.map(docs, (el) => el.follower_id);
-
+        req.followerIds = _.map(collection, el => el.follower_id);
         super.list(req, res, next);
       });
     });
   }
 
-  getCustomListFilters (req) {
-    return {
-      _id: { $in: req.followerIds }
-    };
+  getListOptions (req) {
+    let opts = super.getListOptions(req);
+    opts.filter._id = { $in: req.followerIds };
+
+    return opts;
   }
 
   count (req, res, next) {
-    var { username } = req.params;
+    let { username } = req.params;
+    if (username === 'profile') username = req.user.username;
 
-    if (username === 'profile') {
-      username = req.user.username;
-    }
+    this.Model.findOne({ username }).lean().exec((err, item) => {
+      if (err) return next(err);
+      if (!item) return this.notFound(res);
 
-    User.findOne({username}, (err, doc) => {
-      if (err) {
-        return next(err);
-      }
-
-      if (!doc) {
-        return this.notFound(res);
-      }
-
-      var followee_id = doc._id;
-
-      Following.count({ followee_id }, (err, count) => {
-        if (err) {
-          return next(err);
-        }
-
+      Following.count({ followee_id: item._id }, (err, count) => {
+        if (err) return next(err);
         res.json({ count });
       });
     });
   }
 }
+
+FollowersController.prototype.logPrefix = 'followers-controller';
+FollowersController.prototype.urlPrefix = '/users/:username/followers';
+FollowersController.prototype.auth = true;
+FollowersController.prototype.actions = ['list', 'count'];
+
+FollowersController.prototype.count.type = 'get';
+FollowersController.prototype.count.url = '/count';

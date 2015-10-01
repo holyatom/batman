@@ -2,14 +2,14 @@ import mongoose from 'mongoose';
 import v from 'libs/validators';
 
 
-var schema = new mongoose.Schema({
+let schema = new mongoose.Schema({
   follower_id: {
     type: mongoose.Schema.Types.ObjectId,
-    required: v.required()
+    required: v.required(),
   },
   followee_id: {
     type: mongoose.Schema.Types.ObjectId,
-    required: v.required()
+    required: v.required(),
   },
 });
 
