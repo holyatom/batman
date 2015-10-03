@@ -34,7 +34,7 @@ export default class ModelController extends Controller {
     }
   }
 
-  create (req, res) {
+  create (req, res, next) {
     let model = new this.Model(req.body);
 
     model.validate((err) => {

@@ -24,13 +24,8 @@ export default class Factory {
     return new Promise((resolve, reject) => resolve(resBody));
   }
 
-  create (app, data, done) {
+  create (app, data) {
     return new Promise((resolve, reject) => {
-      if (_.isFunction(data)) {
-        done = data;
-        data = {};
-      }
-
       if (!data) {
         data = {}
       } else {
@@ -60,9 +55,13 @@ export default class Factory {
 
   post (app, data) {
     return new Promise((resolve, reject) => {
-      chai.request(app)
-        .post(this.postUrl)
-        .send(data)
+      let request = chai.request(app).post(this.postUrl);
+
+      if (data.token) {
+        request = request.set('X-Access-Token', data.token)
+      }
+
+      request.send(data)
         .then(res => resolve({ req: data, res }))
         .catch(err => reject(err));
     });
