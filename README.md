@@ -1,4 +1,5 @@
-# Batman
+# Batman [![Circle CI](https://circleci.com/gh/walkapp/batman.svg?style=shield&circle-token=e25fd27edaf936d31d0cf03d37325da2b7dc9afa)](https://circleci.com/gh/walkapp/batman)
+
 Api server
 
 ![Batman](http://www.merchoid.com/wp-content/uploads/2015/01/batman.jpg)
