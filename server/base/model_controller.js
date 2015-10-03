@@ -77,7 +77,7 @@ export default class ModelController extends Controller {
       }
     }
 
-    let countQuery = this.Model.count(opts.filter);
+    let countQuery = this.Model.count(opts.filters);
     let query = this.Model
       .find(opts.filters)
       .sort(opts.order)
@@ -123,7 +123,7 @@ export default class ModelController extends Controller {
     let opts = {
       order: '_id',
       select: '',
-      filter: {},
+      filters: {},
       page: +pagination.page,
       perPage: +pagination.perPage,
     };

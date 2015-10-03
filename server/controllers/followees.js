@@ -1,24 +1,33 @@
 import _ from 'lodash';
 import Q from 'q';
-import UsersController from './users';
+import User from '../models/user';
+import ModelController from '../base/model_controller';
 import Following from '../models/following';
 
 
-export default class FolloweesController extends UsersController {
+export default class FolloweesController extends ModelController {
   create (req, res, next) {
-    let { username, id } = req.params;
+    let { username } = req.params;
 
     if (username !== 'profile') return this.notFound(res);
-    if (req.modelItem) return this.error(res, 'already_followed', 409);
+    username = req.user.username;
 
-    this.Model.findOne({ username: id }).lean().exec((err, doc) => {
+    if (username == req.modelItem.username) {
+      return this.error(res, 'self_following', 409);
+    }
+
+    let filter = {
+      follower_id: req.user._id,
+      followee_id: req.modelItem._id,
+    };
+
+    Following.findOne(filter).lean().exec((err, doc) => {
       if (err) return next(err);
-      if (!doc) return this.notFound(res);
-      if (doc._id.equals(req.user._id)) return this.error(res, 'self_following', 409);
+      if (doc) return this.error(res, 'already_followed', 409);
 
       let model = new Following({
         follower_id: req.user._id,
-        followee_id: doc._id,
+        followee_id: req.modelItem._id,
       });
 
       model.validate((err) => {
@@ -32,22 +41,18 @@ export default class FolloweesController extends UsersController {
     });
   }
 
-  get (req, res, next) {
-    let { username, followee_username } = req.params;
+  get (req, res) {
+    console.log('GET');
+    let { username } = req.params;
     if (username === 'profile') username = req.user.username;
 
-    let followerQuery = this.Model.findOne({ username }).lean();
-    let followeeQuery = this.Model.findOne({ username: followee_username }).lean();
-
-    let dfd = Q.all([followerQuery.exec(), followeeQuery.exec()]);
-
-    dfd.fail(err => next(err));
-    dfd.done(([follower], [followee]) => {
-      if (!follower || !followee) return this.notFound(res);
+    this.Model.findOne({ username }).lean().exec((err, item) => {
+      if (err) return next(err);
+      if (!item) return this.notFound(res);
 
       let filter = {
-        follower_id: follower._id,
-        followee_id: followee._id,
+        follower_id: item._id,
+        followee_id: req.modelItem._id,
       };
 
       Following.findOne(filter).lean().exec((err, item) => {
@@ -59,14 +64,30 @@ export default class FolloweesController extends UsersController {
     });
   }
 
-  delete (req, res, next) {
-    let { username, followee_username } = req.params;
-    if (username === 'profile') username = req.user.username;
+  delete (req, res) {
+    let { username } = req.params;
+    if (username !== 'profile') return this.notFound(res);
 
-    let followerQuery = this.Model.findOne({ username }).lean();
-    let followeeQuery = this.Model.findOne({ username: followee_username }).lean();
+    if (req.user.username === req.modelItem.username) return this.error(res, 'self_unfollowing', 409);
 
-    let dfd = Q.all([followerQuery.exec(), followeeQuery.exec()]);
+    var filter = {
+      follower_id: req.user._id,
+      followee_id: req.modelItem._id,
+    };
+
+    Following.findOne(filter, (err, doc) => {
+      if (err) return next(err);
+
+      if (!doc) return this.error(res, 'not_followed', 409);
+
+      Following.remove(doc, (err) => {
+        if (err) {
+          return next(err);
+        }
+
+        res.json({ success: true });
+      });
+    });
   }
 
   list (req, res, next) {
@@ -92,17 +113,18 @@ export default class FolloweesController extends UsersController {
           return next(err);
         }
 
-        req.followeeIds = _.map(docs, (el) => el.followee_id);
+        req.followeeIds = _.pluck(docs, 'followee_id');
 
         super.list(req, res, next);
       });
     });
   }
 
-  getCustomListFilters (req) {
-    return {
-      _id: { $in: req.followeeIds }
-    };
+  getListOptions (req) {
+    let opts = super.getListOptions(req);
+    opts.filters._id = { $in: req.followeeIds };
+
+    return opts;
   }
 
   count (req, res, next) {
@@ -134,42 +156,38 @@ export default class FolloweesController extends UsersController {
   }
 
   getModelItem (req, res, next) {
-    let { username, id } = req.params;
-    if (username === 'profile') username = req.user.username;
+    console.log('GET MODEL ITEM');
+    let { id } = req.params;
 
-    let followerQuery = this.Model.findOne({ username }).lean();
-    let followeeQuery = this.Model.findOne({ username: id }).lean();
-
-    let dfd = Q.all([followerQuery.exec(), followeeQuery.exec()]);
-
-    dfd.fail(err => next(err));
-    dfd.done(([follower, followee]) => {
-      if (!follower || !followee) return this.notFound(res);
-
-      let filter = {
-        follower_id: follower._id,
-        followee_id: followee._id,
-      };
-
-      Following.findOne(filter, (err, doc) => {
+    this.Model
+      .findOne({ username: id })
+      .lean()
+      .exec((err, item) => {
         if (err) return next(err);
-        if (!doc) return this.notFound(res);
+        if (!item) {
+          return this.notFound(res);
+        }
 
-        req.modelItem = doc;
+        req.modelItem = item;
+        next();
       });
-    });
   }
 }
 
 FolloweesController.prototype.logPrefix = 'followees-controller';
 FolloweesController.prototype.urlPrefix = '/users/:username/following';
+FolloweesController.prototype.Model = User;
 FolloweesController.prototype.auth = true;
 FolloweesController.prototype.actions = ['create', 'count', 'delete', 'get', 'list'];
+FolloweesController.prototype.listFields = ['username', 'full_name', 'image_url', '__v'];
 
+FolloweesController.prototype.create.type = 'post';
 FolloweesController.prototype.create.url = '/:id';
 
+FolloweesController.prototype.delete.type = 'delete';
 FolloweesController.prototype.delete.url = '/:id';
 
+FolloweesController.prototype.get.type = 'get';
 FolloweesController.prototype.get.url = '/:id';
 
 FolloweesController.prototype.count.type = 'get';

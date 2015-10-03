@@ -30,7 +30,7 @@ export default class PostsController extends ModelController {
 
   getListOptions (req) {
     let opts = super.getListOptions(req);
-    opts.filter.user_id = req.modelUserId;
+    opts.filters.user_id = req.modelUserId;
 
     return opts;
   }

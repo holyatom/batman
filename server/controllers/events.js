@@ -31,8 +31,8 @@ export default class EventsController extends ModelController {
   getListOptions (req) {
     let opts = super.getListOptions(req);
 
-    opts.filter.user_id = req.modelUserId;
-    opts.filter.date = { $gt: new Date() };
+    opts.filters.user_id = req.modelUserId;
+    opts.filters.date = { $gt: new Date() };
 
     return opts;
   }

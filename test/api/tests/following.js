@@ -7,7 +7,7 @@ import userFactory from '../factories/user';
 let followingUrl = '/api/users/:username/following';
 let followersUrl = '/api/users/:username/followers';
 
-describe.skip('Following API', () => {
+describe('Following API', () => {
   before(done => {
     setup(server, () => {
       userFactory.create(server.app, null, (err, user) => {
@@ -86,6 +86,7 @@ describe.skip('Following API', () => {
         res.body.per_page.should.equal(20);
         res.body.collection.should.deep.equal([{
           _id: env.followee._id,
+          __v: 0,
           full_name: env.followee.full_name,
           username: env.followee.username,
           image_url: env.followee.image_url,
@@ -120,6 +121,7 @@ describe.skip('Following API', () => {
         res.body.per_page.should.equal(20);
         res.body.collection.should.deep.equal([{
           _id: env.user._id,
+          __v: 0,
           full_name: env.user.full_name,
           username: env.user.username,
           image_url: env.user.image_url,

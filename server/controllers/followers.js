@@ -1,9 +1,10 @@
 import _ from 'lodash';
-import UsersController from './users';
+import ModelController from '../base/model_controller';
+import User from '../models/user';
 import Following from '../models/following';
 
 
-export default class FollowersController extends UsersController {
+export default class FollowersController extends ModelController {
   list (req, res, next) {
     let { username } = req.params;
     if (username === 'profile') username = req.user.username;
@@ -23,7 +24,7 @@ export default class FollowersController extends UsersController {
 
   getListOptions (req) {
     let opts = super.getListOptions(req);
-    opts.filter._id = { $in: req.followerIds };
+    opts.filters._id = { $in: req.followerIds };
 
     return opts;
   }
@@ -46,8 +47,10 @@ export default class FollowersController extends UsersController {
 
 FollowersController.prototype.logPrefix = 'followers-controller';
 FollowersController.prototype.urlPrefix = '/users/:username/followers';
+FollowersController.prototype.Model = User;
 FollowersController.prototype.auth = true;
 FollowersController.prototype.actions = ['list', 'count'];
+FollowersController.prototype.listFields = ['username', 'full_name', 'image_url', '__v'];
 
 FollowersController.prototype.count.type = 'get';
 FollowersController.prototype.count.url = '/count';
