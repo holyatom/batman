@@ -1,6 +1,4 @@
-import ExtendableError from './extendable_error';
-
-export default class ValidationError extends ExtendableError {
+export default class ValidationError extends Error {
   constructor(error) {
     super('validation error');
     this.error = error;
