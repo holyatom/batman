@@ -73,7 +73,6 @@ describe('Feed API', () => {
       .get(url)
       .set('X-Access-Token', env.user.token.value)
       .then(res => {
-        console.log(res.body);
         res.status.should.equal(200);
         let resDates = _.pluck(res.body.collection, 'created');
         resDates.should.be.deep.equal(sortedDates);
