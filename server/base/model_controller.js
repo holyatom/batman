@@ -80,7 +80,7 @@ export default class ModelController extends Controller {
     let countQuery = this.Model.count(opts.filters);
     let query = this.Model
       .find(opts.filters)
-      .sort(opts.order)
+      .sort(opts.order || '_id')
       .select(opts.select)
       .skip((opts.page - 1) * opts.perPage)
       .limit(opts.perPage)
@@ -121,7 +121,7 @@ export default class ModelController extends Controller {
     this.validate(pagination);
 
     let opts = {
-      order: '_id',
+      order: '',
       select: '',
       filters: {},
       page: +pagination.page,

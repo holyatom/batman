@@ -46,9 +46,9 @@ describe('Feed API', () => {
       });
   }));
 
-  it ('GET /api/feed should return all posts of all followed users sorted by created descending', done => {
+  it ('GET /api/feed should return all posts of all followed users', done => {
     let env = server.app.env;
-    let sortedPosts = _.sortBy([env.party1, env.party2, env.party3], i => -i.created);
+    _.forEach([env.party1, env.party2, env.party3], p => delete p['user_id']);
 
     chai.request(server.app)
       .get(url)
@@ -56,7 +56,27 @@ describe('Feed API', () => {
       .then(res => {
         res.status.should.equal(200);
         res.body.total.should.equal(3);
-        res.body.collection.should.deep.equal(sortedPosts);
+        res.body.collection.should.contain(env.party1);
+        res.body.collection.should.contain(env.party2);
+        res.body.collection.should.contain(env.party3);
+        done();
+      })
+      .catch(err => done(err));
+  });
+
+  it ('GET /api/feed should return posts ordered by created descending', done => {
+    let env = server.app.env;
+    let sortedPosts = _.sortBy([env.party1, env.party2, env.party3], i => -new Date(i.created));
+    let sortedDates = _.pluck(sortedPosts, 'created');
+
+    chai.request(server.app)
+      .get(url)
+      .set('X-Access-Token', env.user.token.value)
+      .then(res => {
+        console.log(res.body);
+        res.status.should.equal(200);
+        let resDates = _.pluck(res.body.collection, 'created');
+        resDates.should.be.deep.equal(sortedDates);
         done();
       })
       .catch(err => done(err));
