@@ -10,11 +10,7 @@ export default class FolloweesController extends ModelController {
     let { username } = req.params;
 
     if (username !== 'profile') return this.notFound(res);
-    username = req.user.username;
-
-    if (username == req.modelItem.username) {
-      return this.error(res, 'self_following', 409);
-    }
+    if (req.user.username == req.modelItem.username) return this.error(res, 'self_following', 409);
 
     let filter = {
       follower_id: req.user._id,
@@ -42,7 +38,6 @@ export default class FolloweesController extends ModelController {
   }
 
   get (req, res) {
-    console.log('GET');
     let { username } = req.params;
     if (username === 'profile') username = req.user.username;
 
@@ -77,13 +72,10 @@ export default class FolloweesController extends ModelController {
 
     Following.findOne(filter, (err, doc) => {
       if (err) return next(err);
-
       if (!doc) return this.error(res, 'not_followed', 409);
 
       Following.remove(doc, (err) => {
-        if (err) {
-          return next(err);
-        }
+        if (err) return next(err);
 
         res.json({ success: true });
       });
@@ -98,20 +90,13 @@ export default class FolloweesController extends ModelController {
     }
 
     User.findOne({ username }, (err, doc) => {
-      if (err) {
-        return next(err);
-      }
-
-      if (!doc) {
-        return this.notFound(res);
-      }
+      if (err) return next(err);
+      if (!doc) return this.notFound(res);
 
       var follower_id = doc._id;
 
       Following.find({ follower_id }, 'followee_id', (err, docs) => {
-        if (err) {
-          return next(err);
-        }
+        if (err) return next(err);
 
         req.followeeIds = _.pluck(docs, 'followee_id');
 
@@ -134,21 +119,14 @@ export default class FolloweesController extends ModelController {
       username = req.user.username;
     }
 
-    User.findOne({username}, (err, doc) => {
-      if (err) {
-        return next(err);
-      }
-
-      if (!doc) {
-        return this.notFound(res);
-      }
+    User.findOne({ username }, (err, doc) => {
+      if (err) return next(err);
+      if (!doc) return this.notFound(res);
 
       var follower_id = doc._id;
 
       Following.count({ follower_id }, (err, count) => {
-        if (err) {
-          return next(err);
-        }
+        if (err) return next(err);
 
         res.json({ count });
       });
@@ -156,17 +134,11 @@ export default class FolloweesController extends ModelController {
   }
 
   getModelItem (req, res, next) {
-    console.log('GET MODEL ITEM');
     let { id } = req.params;
 
-    this.Model
-      .findOne({ username: id })
-      .lean()
-      .exec((err, item) => {
+    this.Model.findOne({ username: id }).lean().exec((err, item) => {
         if (err) return next(err);
-        if (!item) {
-          return this.notFound(res);
-        }
+        if (!item) return this.notFound(res);
 
         req.modelItem = item;
         next();
