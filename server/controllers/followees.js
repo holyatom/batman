@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import Q from 'q';
 import User from '../models/user';
 import ModelController from '../base/model_controller';
 import Following from '../models/following';

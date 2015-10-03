@@ -149,7 +149,7 @@ export default class ModelController extends Controller {
     let page = req.query.page || this.defaultPage;
     let perPage = req.query.per_page || this.defaultPerPage;
 
-    return { page, perPage};
+    return { page, perPage };
   }
 
   validate (pagination) {
