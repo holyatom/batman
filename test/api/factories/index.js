@@ -25,35 +25,37 @@ export default class Factory {
   }
 
   create (app, data, done) {
-    if (_.isFunction(data)) {
-      done = data;
-      data = {};
-    }
+    return new Promise((resolve, reject) => {
+      if (_.isFunction(data)) {
+        done = data;
+        data = {};
+      }
 
-    if (!data) {
-      data = {}
-    } else {
-      data = _.clone(data)
-    }
+      if (!data) {
+        data = {}
+      } else {
+        data = _.clone(data)
+      }
 
-    this.preFill(data)
-      .then((data) => {
-        data = _.defaults(data, this.defaults());
-        return this.postFill(data);
-      })
-      .then((data) => {
-        return this.post(app, data);
-      })
-      .then((data) => {
-        this.counter += 1;
-        return this.postCreate(data.req, data.res.body);
-      })
-      .then((item) => {
-        if (done) done(null, item);
-      })
-      .catch((err) => {
-        if (done) done(err);
-      });
+      this.preFill(data)
+        .then((data) => {
+          data = _.defaults(data, this.defaults());
+          return this.postFill(data);
+        })
+        .then((data) => {
+          return this.post(app, data);
+        })
+        .then((data) => {
+          this.counter += 1;
+          return this.postCreate(data.req, data.res.body);
+        })
+        .then((item) => {
+          resolve(item);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
   }
 
   post (app, data) {

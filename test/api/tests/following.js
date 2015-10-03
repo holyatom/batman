@@ -11,15 +11,15 @@ let followersUrl = '/api/users/:username/followers';
 describe('Following API', () => {
   before(done => {
     setup(server, () => {
-      userFactory.create(server.app, null, (err, user) => {
-        if (err) {
-          console.log(err);
-          done(err);
-        } else {
+      userFactory.create(server.app)
+        .then(user => {
           server.app.env.followee = user;
           done();
-        }
-      });
+        })
+        .catch(err => {
+          console.log(err);
+          done(err);
+        });
     })
   });
 
