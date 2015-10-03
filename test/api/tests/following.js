@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import chai from 'chai';
 import server from 'server';
 import { setup } from '../setup';
@@ -152,6 +153,33 @@ describe('Following API', () => {
       .then(res => {
         res.status.should.equal(200);
         res.body.success.should.equal(true);
+        done();
+      })
+      .catch(err => done(err));
+  });
+
+  it ('GET /api/users/:followee_username should return user card with is_followed equal true', done => {
+    var env = server.app.env;
+    chai.request(server.app)
+      .get(`/api/users/${env.followee.username}`)
+      .set('X-Access-Token', env.user.token.value)
+      .then(res => {
+        res.status.should.equal(200);
+        res.body.is_followed.should.equal(true);
+        done();
+      })
+      .catch(err => done(err));
+  });
+
+  it ('GET /api/users should return list of users where followee has is_followed equal true', done => {
+    var env = server.app.env;
+    chai.request(server.app)
+      .get(`/api/users`)
+      .set('X-Access-Token', env.user.token.value)
+      .then(res => {
+        res.status.should.equal(200);
+        let followee = _.filter(res.body.collection, i => i.username === env.followee.username)[0];
+        followee.is_followed.should.equal(true);
         done();
       })
       .catch(err => done(err));
