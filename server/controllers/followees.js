@@ -88,13 +88,13 @@ export default class FolloweesController extends ModelController {
       username = req.user.username;
     }
 
-    User.findOne({ username }, (err, doc) => {
+    this.Model.findOne({ username }).lean().exec((err, doc) => {
       if (err) return next(err);
       if (!doc) return this.notFound(res);
 
       var follower_id = doc._id;
 
-      Following.find({ follower_id }, 'followee_id', (err, docs) => {
+      Following.find({ follower_id }, 'followee_id').lean().exec((err, docs) => {
         if (err) return next(err);
 
         req.followeeIds = _.pluck(docs, 'followee_id');
@@ -118,7 +118,7 @@ export default class FolloweesController extends ModelController {
       username = req.user.username;
     }
 
-    User.findOne({ username }, (err, doc) => {
+    this.Model.findOne({ username }).lean().exec((err, doc) => {
       if (err) return next(err);
       if (!doc) return this.notFound(res);
 
@@ -136,12 +136,12 @@ export default class FolloweesController extends ModelController {
     let { id } = req.params;
 
     this.Model.findOne({ username: id }).lean().exec((err, item) => {
-        if (err) return next(err);
-        if (!item) return this.notFound(res);
+      if (err) return next(err);
+      if (!item) return this.notFound(res);
 
-        req.modelItem = item;
-        next();
-      });
+      req.modelItem = item;
+      next();
+    });
   }
 }
 
