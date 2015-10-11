@@ -42,7 +42,12 @@ export default class ModelController extends Controller {
 
       model.save((err, doc) => {
         if (err) return next(err);
-        res.json(doc.toJSON());
+
+        if (this.mapItem) {
+          this.mapItem(req, res, doc.toJSON());
+        } else {
+          res.json(doc.toJSON());
+        }
       });
     });
   }
@@ -60,19 +65,20 @@ export default class ModelController extends Controller {
   }
 
   delete (req, res) {
-    res.json({ message: 'Empty method' });
+    this.Model.remove(req.modelItem, (err) => {
+      if (err) return next(err);
+      res.json({ success: true });
+    });
   }
 
   list (req, res, next) {
     let opts;
     try {
       opts = this.getListOptions(req);
-    }
-    catch (err) {
+    } catch (err) {
       if (err instanceof ValidationError) {
         return this.error(res, err.getError());
-      }
-      else {
+      } else {
         throw err;
       }
     }
@@ -157,33 +163,22 @@ export default class ModelController extends Controller {
     let error = {};
 
     page = parseInt('' + page, 10);
-    if (isNaN(page)) {
-      error.page = 'bad_int_value';
-    }
+    if (isNaN(page)) error.page = 'bad_int_value';
 
     perPage = parseInt('' + perPage, 10);
-    if (isNaN(perPage)) {
-      error.per_page = 'bad_int_value';
-    }
+    if (isNaN(perPage)) error.per_page = 'bad_int_value';
 
-    if (!_.isEmpty(error)) {
-      throw new ValidationError(error);
-    }
+    if (!_.isEmpty(error)) throw new ValidationError(error);
 
     if (perPage <= 0) {
       error.per_page = 'less_than_allowed';
-    }
-    else if (perPage > this.maxPerPage) {
+    } else if (perPage > this.maxPerPage) {
       error.per_page = 'more_than_allowed';
     }
 
-    if (page <= 0) {
-      error.page = 'less_than_allowed';
-    }
+    if (page <= 0) error.page = 'less_than_allowed';
 
-    if (!_.isEmpty(error)) {
-      throw new ValidationError(error);
-    }
+    if (!_.isEmpty(error)) throw new ValidationError(error);
   }
 
   getListFilters (req) {

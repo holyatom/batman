@@ -96,31 +96,6 @@ Response:
 }
 ```
 
-### Check if one user follows another :lock:
-
-Request for a specific user:
-```js
-GET /api/users/:username/following/:followee_username
-```
-
-Request for an authorized user:
-```js
-GET /api/users/profile/following/:followee_username
-```
-
-Response in case user follows another:
-```json
-{
-  "success": true
-}
-```
-
-Response in case user does not follow another:
-
-```HTTP
-Status: 404 Not Found
-```
-
 ### Follow a user :lock:
 
 Request:

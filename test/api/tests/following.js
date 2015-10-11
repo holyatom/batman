@@ -56,7 +56,7 @@ describe('Following API', () => {
       .set('X-Access-Token', env.user.token.value)
       .then(res => {
         res.status.should.equal(409);
-        res.body.error.code.should.equal('self_following');
+        res.body.error.code.should.equal('follower_equals_followee');
         done();
       })
       .catch(err => done(err));
@@ -87,7 +87,6 @@ describe('Following API', () => {
         res.body.per_page.should.equal(20);
         res.body.collection.should.deep.equal([{
           _id: env.followee._id,
-          __v: 0,
           full_name: env.followee.full_name,
           username: env.followee.username,
           image_url: env.followee.image_url,
@@ -122,7 +121,6 @@ describe('Following API', () => {
         res.body.per_page.should.equal(20);
         res.body.collection.should.deep.equal([{
           _id: env.user._id,
-          __v: 0,
           full_name: env.user.full_name,
           username: env.user.username,
           image_url: env.user.image_url,
@@ -140,19 +138,6 @@ describe('Following API', () => {
       .then(res => {
         res.status.should.equal(200);
         res.body.count.should.equal(1);
-        done();
-      })
-      .catch(err => done(err));
-  });
-
-  it('GET /api/users/:username/following/:followee_username should return success if :username follows :followee_username', done => {
-    var env = server.app.env;
-    chai.request(server.app)
-      .get(`${followingUrl.replace(':username', env.user.username)}/${env.followee.username}`)
-      .set('X-Access-Token', env.user.token.value)
-      .then(res => {
-        res.status.should.equal(200);
-        res.body.success.should.equal(true);
         done();
       })
       .catch(err => done(err));
@@ -192,7 +177,7 @@ describe('Following API', () => {
       .set('X-Access-Token', env.user.token.value)
       .then(res => {
         res.status.should.equal(409);
-        res.body.error.code.should.equal('self_unfollowing');
+        res.body.error.code.should.equal('follower_equals_followee');
         done();
       })
       .catch(err => done(err));
@@ -224,14 +209,14 @@ describe('Following API', () => {
       .catch(err => done(err));
   });
 
-  it('DELETE /api/users/profile/following/:username if :username is not followed should return 409', done => {
+  it('DELETE /api/users/profile/following/:username if :username is not followed should return 404', done => {
     var env = server.app.env;
     chai.request(server.app)
       .delete(`${followingUrl.replace(':username', 'profile')}/${env.followee.username}`)
       .set('X-Access-Token', env.user.token.value)
       .then(res => {
-        res.status.should.equal(409);
-        res.body.error.code.should.equal('not_followed');
+        res.status.should.equal(404);
+        res.body.error.code.should.equal('not_found');
         done();
       })
       .catch(err => done(err));

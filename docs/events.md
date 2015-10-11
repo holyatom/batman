@@ -1,11 +1,10 @@
 ## Events
 
-### Create :lock:
+### Create a new event :lock:
 
 Request:
 ```json
 POST /api/users/profile/events
-
 {
   "description": "first event",
   "date": "Sat Sep 12 2015 20:02:19 GMT+0600",
@@ -27,11 +26,17 @@ Response:
 }
 ```
 
-### Get list :lock:
+### List events of a user :lock:
+> Upcoming events are only returned
 
-Request:
+Request for a specific user:
 ```json
 GET /api/users/:username/events
+```
+
+Request for an authorized user:
+```json
+GET /api/users/profile/events
 ```
 
 Response:
