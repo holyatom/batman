@@ -4,7 +4,9 @@
   "private": true,
   "description": "API server",
   "main": "server/index.js",
-  "scripts": {},
+  "scripts": {
+    "postinstall": "gulp symlink"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/walkapp/batman.git"
