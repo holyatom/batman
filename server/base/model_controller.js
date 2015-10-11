@@ -86,7 +86,7 @@ export default class ModelController extends Controller {
     let countQuery = this.Model.count(opts.filters);
     let query = this.Model
       .find(opts.filters)
-      .sort(opts.order || '_id')
+      .sort(opts.order)
       .select(opts.select)
       .skip((opts.page - 1) * opts.perPage)
       .limit(opts.perPage)
