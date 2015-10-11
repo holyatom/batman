@@ -123,13 +123,15 @@ export default class ModelController extends Controller {
   }
 
   getListOptions (req) {
+    if (!this.listFields) throw new Error('listFields value is not specified');
+
     let pagination = this.getPagination(req);
     this.validate(pagination);
 
     let opts = {
-      order: '',
-      select: '',
       filters: {},
+      order: this.listOrder,
+      select: this.listFields.join(' '),
       page: +pagination.page,
       perPage: +pagination.perPage,
     };
@@ -141,12 +143,6 @@ export default class ModelController extends Controller {
     if ((this.filterableFields || []).length) {
       opts.filters = this.getListFilters(req);
     }
-
-    if (!this.listFields) {
-      throw new Error('listFields value is not specified');
-    }
-
-    opts.select = this.listFields.join(' ');
 
     return opts;
   }
@@ -220,6 +216,7 @@ ModelController.prototype.Model = null;
 ModelController.prototype.sortableFields = null;
 ModelController.prototype.filterableFields = null;
 ModelController.prototype.listFields = null;
+ModelController.prototype.listOrder = '_id';
 ModelController.prototype.auth = false;
 
 ModelController.prototype.defaultPage = 1;
