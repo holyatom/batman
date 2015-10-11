@@ -50,7 +50,7 @@ FollowersController.prototype.urlPrefix = '/users/:username/followers';
 FollowersController.prototype.Model = User;
 FollowersController.prototype.auth = true;
 FollowersController.prototype.actions = ['list', 'count'];
-FollowersController.prototype.listFields = ['username', 'full_name', 'image_url', '__v'];
+FollowersController.prototype.listFields = ['username', 'full_name', 'image_url'];
 
 FollowersController.prototype.count.type = 'get';
 FollowersController.prototype.count.url = '/count';

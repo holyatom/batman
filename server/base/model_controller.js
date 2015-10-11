@@ -42,7 +42,12 @@ export default class ModelController extends Controller {
 
       model.save((err, doc) => {
         if (err) return next(err);
-        res.json(doc.toJSON());
+
+        if (this.mapItem) {
+          this.mapItem(req, res, doc.toJSON());
+        } else {
+          res.json(doc.toJSON());
+        }
       });
     });
   }
@@ -60,7 +65,10 @@ export default class ModelController extends Controller {
   }
 
   delete (req, res) {
-    res.json({ message: 'Empty method' });
+    this.Model.remove(req.modelItem, (err) => {
+      if (err) return next(err);
+      res.json({ success: true });
+    });
   }
 
   list (req, res, next) {

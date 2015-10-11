@@ -4,3 +4,4 @@
 --debug
 --timeout 15000
 --recursive
+--colors

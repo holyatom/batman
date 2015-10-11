@@ -29,9 +29,7 @@ export default {
 
     // Following errors
     already_followed: 'User is already followed',
-    not_followed: 'User is not followed',
-    self_following: 'User tries to follow themselves',
-    self_unfollowing: 'User tries to unfollow themselves',
+    follower_equals_followee: 'Users can not follow themselves',
 
     // Extra messages:
     alphanumeric: 'Alphanumeric symbols are allowed only'

@@ -39,6 +39,8 @@ export default class UsersController extends ModelController {
   }
 
   mapItem (req, res, item) {
+    if (!req.user) return res.json(item);
+
     let filter = {
       follower_id: req.user._id,
       followee_id: item._id,
