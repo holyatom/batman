@@ -60,7 +60,6 @@ describe('Pagination', () => {
       .get(`${url}/?page=2`)
       .set('X-Access-Token', env.user.token.value)
       .then(res => {
-        console.log(res.body);
         res.status.should.equal(200);
         res.body.total.should.equal(2);
         res.body.page.should.equal(2);

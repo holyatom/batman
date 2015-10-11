@@ -4,74 +4,46 @@ import User from '../models/user';
 
 
 export default class EventsController extends ModelController {
-  constructor () {
-    super();
-    this.logPrefix = 'user-events-controller';
-    this.urlPrefix = '/users/:username/events';
-    this.Model = Event;
-    this.auth = true;
-    this.actions = ['create', 'list'];
-    this.sortableFields = ['created'];
-    this.listFields = ['description', 'date', 'image_urls', 'address', 'user_id', 'created', '__v'];
-
-    this.create.type = 'post';
-  }
-
   create (req, res, next) {
-    var
-      { username } = req.params,
-      model = new this.Model(req.body);
+    let { username } = req.params;
 
-    if (username !== 'profile') {
-      return this.notFound(res);
-    }
+    if (username !== 'profile') return this.notFound(res);
 
-    model.set({
-      user_id: req.user._id,
-      created: new Date()
-    });
+    req.body.user_id = req.user._id;
+    req.body.created = new Date();
 
-    model.validate((err) => {
-      if (err) {
-        return this.error(res, err.errors);
-      }
-
-      model.save((err, doc) => {
-        if (err) {
-          return next(err);
-        }
-
-        res.json(doc.toJSON());
-      });
-    });
+    super.create(req, res, next);
   }
 
   list (req, res, next) {
-    var { username } = req.params;
+    let { username } = req.params;
+    if (username === 'profile') username = req.user.username;
 
-    if (username === 'profile') {
-      username = req.user.username;
-    }
+    User.findOne({ username }).lean().exec((err, user) => {
+      if (err) return next(err);
+      if (!user) return this.notFound(res);
 
-    User.findOne({username}, (err, doc) => {
-      if (err) {
-        return next(err);
-      }
-
-      if (!doc) {
-        return this.notFound(res);
-      }
-
-      req.modelUserId = doc._id;
+      req.modelUserId = user._id;
       super.list(req, res, next);
     });
   }
 
-  getCustomListFilters (req) {
-    var currentDate = new Date();
-    return {
-      user_id: req.modelUserId,
-      date: {$gt: currentDate}
-    }
+  getListOptions (req) {
+    let opts = super.getListOptions(req);
+
+    opts.filters.user_id = req.modelUserId;
+    opts.filters.date = { $gt: new Date() };
+
+    return opts;
   }
 }
+
+EventsController.prototype.logPrefix = 'user-events-controller';
+EventsController.prototype.urlPrefix = '/users/:username/events';
+EventsController.prototype.Model = Event;
+EventsController.prototype.auth = true;
+EventsController.prototype.actions = ['create', 'list'];
+EventsController.prototype.sortableFields = ['created'];
+EventsController.prototype.listFields = ['description', 'date', 'image_urls', 'address', 'user_id', 'created', '__v'];
+
+EventsController.prototype.create.type = 'post';

@@ -10,10 +10,6 @@ import middlewares from '../middlewares';
 // NOT FOUND = 404;
 
 export default class Controller {
-  constructor () {
-    this.logPrefix = 'controller';
-  }
-
   _bind (callbacks) {
     if (_.isArray(callbacks)) {
       for (let i = 0; i < callbacks.length; i++) {
@@ -63,6 +59,7 @@ export default class Controller {
 }
 
 Controller.prototype.log = log;
+Controller.prototype.logPrefix = 'controller';
 Controller.prototype.middlewares = middlewares;
 Controller.prototype.errorMessage = langs.errorMessage;
 Controller.prototype.error = middlewares.error;

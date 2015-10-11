@@ -5,39 +5,28 @@ import User from '../models/user';
 
 
 export default class AuthController extends ModelController {
-  constructor () {
-    super();
-    this.logPrefix = 'auth-controller';
-    this.urlPrefix = '/auth';
-    this.Model = User;
-    this.actions = ['login'];
-
-    this.login.type = 'post';
-  }
-
   generateToken (user) {
-    var
-      expires = new Date(),
-      claims = {
-        sub: user._id,
-        iss: 'https://walk.com',
-        permissions: ''
-      },
+    let expires = new Date();
+    let claims = {
+      sub: user._id,
+      iss: 'https://walk.com',
+      permissions: '',
+    };
 
-      token = jwt.sign(claims, config.secret, {
-        expiresInMinutes: config.jwt.expires
-      });
+    let token = jwt.sign(claims, config.secret, {
+      expiresInMinutes: config.jwt.expires,
+    });
 
     expires.setMinutes(expires.getMinutes() + config.jwt.expires);
 
     return {
+      expires,
       value: token,
-      expires: expires
     };
   }
 
   login (req, res, next) {
-    var { username, password } = req.body;
+    let { username, password } = req.body;
 
     if (!username || !password) {
       return this.error(res, { username: 'wrong_login_or_password' });
@@ -53,12 +42,19 @@ export default class AuthController extends ModelController {
       }
 
       if (doc && doc.comparePassword(password)) {
-        var item = doc.toJSON();
-        item.token = this.generateToken(item);
-        res.json(item);
+        let user = doc.toJSON();
+        user.token = this.generateToken(user);
+        res.json(user);
       } else {
         return this.error(res, { username: 'wrong_login_or_password' });;
       }
     });
   }
 }
+
+AuthController.prototype.logPrefix = 'auth-controller';
+AuthController.prototype.urlPrefix = '/auth';
+AuthController.prototype.Model = User;
+AuthController.prototype.actions = ['login'];
+
+AuthController.prototype.login.type = 'post';

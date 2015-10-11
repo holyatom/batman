@@ -10,3 +10,5 @@ export default class Api extends Controller {
     this.get('/api/status', this.status);
   }
 }
+
+Controller.prototype.logPrefix = 'api-controller';

@@ -4,72 +4,44 @@ import User from '../models/user';
 
 
 export default class PostsController extends ModelController {
-  constructor () {
-    super();
-    this.logPrefix = 'user-posts-controller';
-    this.urlPrefix = '/users/:username/posts';
-    this.Model = Post;
-    this.auth = true;
-    this.actions = ['create', 'list'];
-    this.sortableFields = ['created'];
-    this.listFields = ['description', 'address', 'image_urls', 'user_id', 'created', '__v'];
-
-    this.create.type = 'post';
-  }
-
   create (req, res, next) {
-    var
-      { username } = req.params,
-      model = new this.Model(req.body);
+    let { username } = req.params;
 
-    if (username !== 'profile') {
-      return this.notFound(res);
-    }
+    if (username !== 'profile') return this.notFound(res);
 
-    model.set({
-      user_id: req.user._id,
-      created: new Date()
-    });
+    req.body.user_id = req.user._id;
+    req.body.created = new Date();
 
-    model.validate((err) => {
-      if (err) {
-        return this.error(res, err.errors);
-      }
-
-      model.save((err, doc) => {
-        if (err) {
-          return next(err);
-        }
-
-        res.json(doc.toJSON());
-      });
-    });
+    super.create(req, res, next);
   }
 
   list (req, res, next) {
-    var { username } = req.params;
+    let { username } = req.params;
+    if (username === 'profile') username = req.user.username;
 
-    if (username === 'profile') {
-      username = req.user.username;
-    }
-
-    User.findOne({ username }, (err, doc) => {
-      if (err) {
-        return next(err);
-      }
-
-      if (!doc) {
-        return this.notFound(res);
-      }
+    User.findOne({ username }).lean().exec((err, doc) => {
+      if (err) return next(err);
+      if (!doc) return this.notFound(res);
 
       req.modelUserId = doc._id;
       super.list(req, res, next);
     });
   }
 
-  getCustomListFilters (req) {
-    return {
-      user_id: req.modelUserId
-    }
+  getListOptions (req) {
+    let opts = super.getListOptions(req);
+    opts.filters.user_id = req.modelUserId;
+
+    return opts;
   }
 }
+
+PostsController.prototype.logPrefix = 'user-posts-controller';
+PostsController.prototype.urlPrefix = '/users/:username/posts';
+PostsController.prototype.Model = Post;
+PostsController.prototype.auth = true;
+PostsController.prototype.actions = ['create', 'list'];
+PostsController.prototype.sortableFields = ['created'];
+PostsController.prototype.listFields = ['description', 'address', 'image_urls', 'user_id', 'created', '__v'];
+
+PostsController.prototype.create.type = 'post';
