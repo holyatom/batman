@@ -24,43 +24,44 @@ export default class Factory {
     return new Promise((resolve, reject) => resolve(resBody));
   }
 
-  create (app, data, done) {
-    if (_.isFunction(data)) {
-      done = data;
-      data = {};
-    }
+  create (app, data) {
+    return new Promise((resolve, reject) => {
+      if (!data) {
+        data = {}
+      } else {
+        data = _.clone(data)
+      }
 
-    if (!data) {
-      data = {}
-    } else {
-      data = _.clone(data)
-    }
-
-    this.preFill(data)
-      .then((data) => {
-        data = _.defaults(data, this.defaults());
-        return this.postFill(data);
-      })
-      .then((data) => {
-        return this.post(app, data);
-      })
-      .then((data) => {
-        this.counter += 1;
-        return this.postCreate(data.req, data.res.body);
-      })
-      .then((item) => {
-        if (done) done(null, item);
-      })
-      .catch((err) => {
-        if (done) done(err);
-      });
+      this.preFill(data)
+        .then((data) => {
+          data = _.defaults(data, this.defaults());
+          return this.postFill(data);
+        })
+        .then((data) => {
+          return this.post(app, data);
+        })
+        .then((data) => {
+          this.counter += 1;
+          return this.postCreate(data.req, data.res.body);
+        })
+        .then((item) => {
+          resolve(item);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
   }
 
   post (app, data) {
     return new Promise((resolve, reject) => {
-      chai.request(app)
-        .post(this.postUrl)
-        .send(data)
+      let request = chai.request(app).post(this.postUrl);
+
+      if (data.token) {
+        request = request.set('X-Access-Token', data.token)
+      }
+
+      request.send(data)
         .then(res => resolve({ req: data, res }))
         .catch(err => reject(err));
     });

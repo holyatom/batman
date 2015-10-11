@@ -59,14 +59,14 @@ export function setup (server, done) {
   });
 
   database(() => {
-    userFactory.create(app, null, (err, user) => {
-      if (err) {
-        console.log(err);
-        done(err);
-      } else {
+    userFactory.create(app)
+      .then(user => {
         env.user = user;
         done();
-      }
-    });
+      })
+      .catch(err => {
+        console.log(err);
+        done(err);
+      });
   });
 }

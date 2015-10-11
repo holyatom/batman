@@ -9,16 +9,16 @@ let url = '/api/auth';
 describe('Auth API', () => {
   before(done => setup(server, () => {
     var password = '123456';
-    userFactory.create(server.app, { password }, (err, user) => {
-      if (err) {
-        console.log(err);
-        done(err);
-      } else {
+    userFactory.create(server.app, { password })
+      .then(user => {
         user.password = password;
         server.app.env.authUser = user;
         done();
-      }
-    });
+      })
+      .catch(err => {
+        console.log(err);
+        done(err);
+      });
   }));
 
   it('POST /api/auth should authenticate and return user', done => {
