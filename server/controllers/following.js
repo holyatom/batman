@@ -13,18 +13,16 @@ export default class FollowingController extends ModelController {
       if (item._id.equals(req.user._id)) return this.error(res, 'follower_equals_followee', 409);
 
 
-      let filters = {
+      let model = {
         follower_id: req.user._id,
         followee_id: item._id,
       };
 
-      this.Model.findOne(filters).lean().exec((err, item) => {
+      this.Model.findOne(model).lean().exec((err, item) => {
         if (err) return next(err);
         if (item) return this.error(res, 'already_followed', 409);
 
-        req.body.follower_id = filters.follower_id;
-        req.body.followee_id = filters.followee_id;
-
+        req.body = model;
         super.create(req, res, next);
       });
     });
