@@ -1,4 +1,10 @@
 export default {
-  profile: true,
   count: true,
-}
+  profile: true,
+  search: true,
+  settings: true,
+  feed: true,
+  signin: true,
+  signup: true,
+  about: true,
+};

@@ -6,8 +6,13 @@ export default class Api extends Controller {
     res.send({ status: 'I am batman' });
   }
 
+  buckwheat (req, res, next) {
+    throw new Error('Buckwheat exception!');
+  }
+
   router () {
     this.get('/api/status', this.status);
+    this.get('/api/buckwheat', this.buckwheat);
   }
 }
 
