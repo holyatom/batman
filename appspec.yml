@@ -57,9 +57,13 @@ permissions:
     owner: ubuntu
     group: ubuntu
     type:
-      - directory
       - file
-
+  - object: /home/ubuntu/batman
+      pattern: "**"
+      owner: ubuntu
+      group: ubuntu
+      type:
+        - directory
 
 # If you are not running any commands on the instance, then remove
 #   the "hooks" section altogether. A blank or incomplete "hooks" section
