@@ -5,3 +5,17 @@ machine:
 test:
   override:
     - gulp test
+
+deployment:
+  staging:
+    branch: ConfDeploy
+    codedeploy:
+      batman:
+        application_root: /
+        region: eu-west-1
+        revision_location:
+          revision_type: S3
+          s3_location:
+            bucket: walk-bucket
+            key_pattern: batman-{BRANCH}-{SHORT_COMMIT}
+        deployment_group: walk
