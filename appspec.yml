@@ -56,12 +56,14 @@ permissions:
     pattern: "**"
     owner: ubuntu
     group: ubuntu
+    mode: 777
     type:
       - file
   - object: /home/ubuntu/batman
     pattern: "**"
     owner: ubuntu
     group: ubuntu
+    mode: 777
     type:
       - directory
 
