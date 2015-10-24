@@ -51,21 +51,6 @@ files:
 #      range:
 #    type:
 #      -
-permissions:
-  - object: /home/ubuntu/batman
-    pattern: "**"
-    owner: ubuntu
-    group: ubuntu
-    mode: 777
-    type:
-      - file
-  - object: /home/ubuntu/batman
-    pattern: "**"
-    owner: ubuntu
-    group: ubuntu
-    mode: 777
-    type:
-      - directory
 
 # If you are not running any commands on the instance, then remove
 #   the "hooks" section altogether. A blank or incomplete "hooks" section
