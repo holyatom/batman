@@ -8,7 +8,7 @@ test:
 
 deployment:
   staging:
-    branch: ConfDeploy
+    branch: master
     codedeploy:
       batman:
         application_root: /
