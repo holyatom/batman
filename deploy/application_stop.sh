@@ -1,3 +1,6 @@
 #!/usr/bin/env bash
 mkdir /home/ubuntu/walk/batman -p
-forever stop batman
+if [ -f /home/ubuntu/.forever/pids/batman.pid ]
+then
+  forever stop batman
+fi
