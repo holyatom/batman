@@ -21,7 +21,11 @@ var schema = new mongoose.Schema({
   created: {
     type: Date,
     required: v.required()
-  }
+  },
+  location_name: {
+    type: String,
+    required: v.required()
+  },
 });
 
 export default mongoose.model('Post', schema);
