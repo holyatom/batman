@@ -23,7 +23,7 @@ export default class Controller {
   }
 
   _handler (type, route, callbacks) {
-    var boundCallbacks = this._bind(callbacks);
+    let boundCallbacks = this._bind(callbacks);
     this._app[type](route, ...callbacks);
   }
 

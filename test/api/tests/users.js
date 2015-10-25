@@ -8,14 +8,14 @@ let url = '/api/users';
 let user = {
   username: 'lenin',
   password: '123456',
-  full_name: 'Vladimir Iliych Lenin'
+  full_name: 'Vladimir Iliych Lenin',
 };
 
 describe('Users API', () => {
   before(done => setup(server, done));
 
   it('POST /api/users should create and return user', done => {
-    var env = server.app.env;
+    let env = server.app.env;
     chai.request(server.app)
       .post(url)
       .send(user)
@@ -28,16 +28,16 @@ describe('Users API', () => {
         res.body.full_name.should.equal(user.full_name);
         res.body.image_url.should.equal('/images/default_avatar.jpg');
         res.body._id.should.exist;
-        var created = +(new Date(res.body.created));
-        var now = +(new Date());
+        let created = +(new Date(res.body.created));
+        let now = +(new Date());
         created.should.be.closeTo(now, 1000);
         done();
       })
-      .catch(err => done(err));
+      .catch(done);
   });
 
   it('GET /api/users/:username should return user card', done => {
-    var env = server.app.env;
+    let env = server.app.env;
     chai.request(server.app)
       .get(`${url}/${user.username}`)
       .set('X-Access-Token', env.user.token.value)
@@ -52,11 +52,11 @@ describe('Users API', () => {
         res.body.is_followed.should.equal(false);
         done();
       })
-      .catch(err => done(err));
+      .catch(done);
   });
 
   it('GET /api/users/profile should return current user card', done => {
-    var env = server.app.env;
+    let env = server.app.env;
     chai.request(server.app)
       .get(`${url}/profile`)
       .set('X-Access-Token', env.user.token.value)
@@ -71,11 +71,11 @@ describe('Users API', () => {
         res.body.is_followed.should.equal(false);
         done();
       })
-      .catch(err => done(err));
+      .catch(done);
   });
 
   it('GET /api/users should return list of users', done => {
-    var env = server.app.env;
+    let env = server.app.env;
     chai.request(server.app)
       .get(`${url}`)
       .set('X-Access-Token', env.user.token.value)
@@ -92,7 +92,7 @@ describe('Users API', () => {
             username: env.user.username,
             full_name: env.user.full_name,
             image_url: env.user.image_url,
-            is_followed: false
+            is_followed: false,
           },
           {
             _id: env.createdUser._id,
@@ -101,11 +101,11 @@ describe('Users API', () => {
             username: env.createdUser.username,
             full_name: env.createdUser.full_name,
             image_url: env.createdUser.image_url,
-            is_followed: false
-          }
+            is_followed: false,
+          },
         ]);
         done();
       })
-      .catch(err => done(err));
+      .catch(done);
   });
 });

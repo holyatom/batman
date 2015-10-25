@@ -14,7 +14,7 @@ class UserFactory extends Factory {
     return {
       username: `testuser${this.counter}`,
       password: '123456',
-      full_name: `Test User${this.counter}`
+      full_name: `Test User${this.counter}`,
     };
   }
 

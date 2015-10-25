@@ -1,5 +1,5 @@
 export default class ValidationError extends Error {
-  constructor(error) {
+  constructor (error) {
     super('validation error');
     this.error = error;
   }

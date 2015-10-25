@@ -28,7 +28,7 @@ let database = callback => {
       } else {
         callback();
       }
-    })
+    });
   });
 };
 
@@ -41,8 +41,8 @@ export function setup (server, done) {
   chai.use(chaiHttp);
   chai.should();
 
-  var app = server.app;
-  var env = app.env = {};
+  let app = server.app;
+  let env = app.env = {};
 
   app.use(bodyParser.json());
   app.use(middlewares.lang);

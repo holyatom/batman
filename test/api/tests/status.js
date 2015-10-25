@@ -14,6 +14,6 @@ describe('API status', () => {
         res.body.status.should.equal('I am batman');
         done();
       })
-      .catch(err => done(err));
+      .catch(done);
   });
 });

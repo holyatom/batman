@@ -14,7 +14,7 @@ export default class ModelController extends Controller {
 
     if (this.auth) this._app.use(baseUrl, middlewares.auth);
 
-    for (let action of this.actions ) {
+    for (let action of this.actions) {
       let handlers = [];
       let handler = this[action];
       let method = handler.type || 'get';

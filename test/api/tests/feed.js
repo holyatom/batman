@@ -38,17 +38,14 @@ describe('Feed API', () => {
       env.party3 = party3;
       env.party4 = party4;
       env.party5 = party5;
+      done();
     })
-    .then(() => done())
-    .fail(err => {
-        console.log(err);
-        done(err);
-      });
+    .fail(done);
   }));
 
-  it ('GET /api/feed should return all posts of all followed users', done => {
+  it('GET /api/feed should return all posts of all followed users', done => {
     let env = server.app.env;
-    _.forEach([env.party1, env.party2, env.party3], p => delete p['user_id']);
+    _.forEach([env.party1, env.party2, env.party3], p => delete p.user_id);
 
     chai.request(server.app)
       .get(url)
@@ -61,10 +58,10 @@ describe('Feed API', () => {
         res.body.collection.should.contain(env.party3);
         done();
       })
-      .catch(err => done(err));
+      .catch(done);
   });
 
-  it ('GET /api/feed should return posts ordered by created descending', done => {
+  it('GET /api/feed should return posts ordered by created descending', done => {
     let env = server.app.env;
     let sortedPosts = _.sortBy([env.party1, env.party2, env.party3], i => -new Date(i.created));
     let sortedDates = _.pluck(sortedPosts, 'created');
@@ -78,6 +75,6 @@ describe('Feed API', () => {
         resDates.should.be.deep.equal(sortedDates);
         done();
       })
-      .catch(err => done(err));
+      .catch(done);
   });
 });
