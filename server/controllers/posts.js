@@ -17,7 +17,7 @@ export default class PostsController extends ModelController {
   }
 
   mapItem (req, res, item) {
-    delete item['user_id'];
+    delete item.user_id;
 
     item.user = {
       id: req.user._id,

@@ -32,7 +32,7 @@ export default class FeedController extends ModelController {
 
       for (let post of data.collection) {
         let user = followees[post.user_id];
-        delete post['user_id'];
+        delete post.user_id;
         post.user = {
           id: user._id,
           full_name: user.full_name,
