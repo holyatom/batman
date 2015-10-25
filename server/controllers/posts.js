@@ -49,13 +49,13 @@ export default class PostsController extends ModelController {
   }
 
   mapList (req, res, data) {
-    _.forEach(data.collection, post => {
+    for (let post of data.collection) {
       post.user = {
         id: req.modelUser._id,
         full_name: req.modelUser.full_name,
         image_url: req.modelUser.image_url,
       };
-    });
+    }
 
     res.json(data);
   }

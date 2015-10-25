@@ -12,6 +12,7 @@ class PostFactory extends Factory {
       description: `testdescription${this.counter}`,
       address: `testaddress${this.counter}`,
       image_urls: ['http://1', 'http://2'],
+      location_name: `testlocation${this.counter}}`,
     };
   }
 }

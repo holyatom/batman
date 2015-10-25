@@ -50,6 +50,7 @@ describe('Feed API', () => {
     let env = server.app.env;
     _.forEach([env.party1, env.party2, env.party3], p => delete p['user_id']);
 
+
     chai.request(server.app)
       .get(url)
       .set('X-Access-Token', env.user.token.value)
