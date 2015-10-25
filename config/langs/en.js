@@ -32,6 +32,6 @@ export default {
     follower_equals_followee: 'Users can not follow themselves',
 
     // Extra messages:
-    alphanumeric: 'Alphanumeric symbols are allowed only'
-  }
+    alphanumeric: 'Alphanumeric symbols are allowed only',
+  },
 };

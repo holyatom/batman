@@ -9,6 +9,8 @@ var
   gulp = require('gulp'),
   nodemon = require('gulp-nodemon'),
   symlink = require('gulp-symlink'),
+  jscs = require('gulp-jscs'),
+  through2 = require('through2'),
   exec = require('child_process').exec;
 
 SYMLINKS = {
@@ -77,6 +79,17 @@ gulp.task('symlink', function () {
 // TEST
 // ===============================================================
 
+gulp.task('jscs', function () {
+  gulp
+    .src(['./server/**/*.js', './config/**/*.js', './libs/**/*.js', './test/**/*.js'])
+    .pipe(jscs())
+    // hook to check over than 16 files
+    // see https://github.com/jscs-dev/gulp-jscs/issues/22
+    .pipe(through2.obj(function(file, encoding, callback) {
+      callback();
+    }));
+});
+
 gulp.task('mocha', function (done) {
   var runner = exec('env NODE_ENV=test mocha', function (err) {
     done(err);
@@ -85,7 +98,7 @@ gulp.task('mocha', function (done) {
   proxyLog(runner);
 });
 
-gulp.task('test', ['mocha']);
+gulp.task('test', ['mocha', 'jscs']);
 
 
 // ===============================================================

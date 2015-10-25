@@ -33,13 +33,8 @@ export default class AuthController extends ModelController {
     }
 
     this.Model.findOne({ username }, (err, doc) => {
-      if (err) {
-        next(err);
-      }
-
-      if (!doc) {
-        return this.error(res, 'unknown_user', 404);
-      }
+      if (err) next(err);
+      if (!doc) return this.error(res, 'unknown_user', 404);
 
       if (doc && doc.comparePassword(password)) {
         let user = doc.toJSON();

@@ -15,7 +15,7 @@ describe('Posts API', () => {
   before(done => setup(server, done));
 
   it('POST /api/users/profile/posts should create and return post of current user', done => {
-    var env = server.app.env;
+    let env = server.app.env;
     chai.request(server.app)
       .post(url.replace(':username', 'profile'))
       .set('X-Access-Token', env.user.token.value)
@@ -30,16 +30,16 @@ describe('Posts API', () => {
         res.body.image_urls.should.deep.equal(post.image_urls);
         res.body.address.should.equal(post.address);
         res.body._id.should.exist;
-        var created = +(new Date(res.body.created));
-        var now = +(new Date());
+        let created = +(new Date(res.body.created));
+        let now = +(new Date());
         created.should.be.closeTo(now, 1000);
         done();
       })
-      .catch(err => done(err));
+      .catch(done);
   });
 
   it('GET /api/users/:username/posts should return list of user posts', done => {
-    var env = server.app.env;
+    let env = server.app.env;
     chai.request(server.app)
       .get(url.replace(':username', env.user.username))
       .set('X-Access-Token', env.user.token.value)
@@ -52,6 +52,6 @@ describe('Posts API', () => {
         res.body.collection[0].should.deep.equal(env.createdPost);
         done();
       })
-      .catch(err => done(err));
+      .catch(done);
   });
 });

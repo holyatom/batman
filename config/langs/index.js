@@ -13,4 +13,4 @@ class Langs {
 
 Langs.prototype.en = en;
 
-export default new Langs()
+export default new Langs();

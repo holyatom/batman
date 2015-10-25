@@ -1,14 +1,14 @@
 export default {
   server: {
     ip: '127.0.0.1',
-    port: parseInt(process.env.PORT, 10) || 8080
+    port: parseInt(process.env.PORT, 10) || 8080,
   },
   mongodb: {
     host: 'localhost',
-    database: 'walkapp'
+    database: 'walkapp',
   },
   secret: 'whatdidyouwanttoseehere',
   jwt: {
-    expires: 1440
-  }
+    expires: 1440,
+  },
 };

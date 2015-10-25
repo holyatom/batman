@@ -2,22 +2,17 @@ import _ from 'lodash';
 import url from 'url';
 
 
-var
-  CORS_REGEXP = /(?:.*\.)?walk\.(?:dev|me)$/,
-  allowedHeaders = [
-    'Accept', 'Content-Type', 'X-Access-Token'
-  ].join(', ');
+const CORS_REGEXP = /(?:.*\.)?walk\.(?:dev|me)$/;
+let allowedHeaders = [
+  'Accept', 'Content-Type', 'X-Access-Token',
+].join(', ');
 
 export function dev (req, res, next) {
-  var
-    parsedUrl,
-    referer = req.get('referer');
+  let referer = req.get('referer');
 
-  if (!referer) {
-    return next();
-  }
+  if (!referer) return next();
 
-  parsedUrl = url.parse(referer);
+  let parsedUrl = url.parse(referer);
 
   if (CORS_REGEXP.test(parsedUrl.hostname)) {
     let origin = `${parsedUrl.protocol}//${parsedUrl.host}`;

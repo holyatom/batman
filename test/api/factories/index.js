@@ -27,9 +27,9 @@ export default class Factory {
   create (app, data) {
     return new Promise((resolve, reject) => {
       if (!data) {
-        data = {}
+        data = {};
       } else {
-        data = _.clone(data)
+        data = _.clone(data);
       }
 
       this.preFill(data)
@@ -58,7 +58,7 @@ export default class Factory {
       let request = chai.request(app).post(this.postUrl);
 
       if (data.token) {
-        request = request.set('X-Access-Token', data.token)
+        request = request.set('X-Access-Token', data.token);
       }
 
       request.send(data)
