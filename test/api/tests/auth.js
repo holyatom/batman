@@ -8,21 +8,18 @@ let url = '/api/auth';
 
 describe('Auth API', () => {
   before(done => setup(server, () => {
-    var password = '123456';
+    let password = '123456';
     userFactory.create(server.app, { password })
       .then(user => {
         user.password = password;
         server.app.env.authUser = user;
         done();
       })
-      .catch(err => {
-        console.log(err);
-        done(err);
-      });
+      .catch(done);
   }));
 
   it('POST /api/auth should authenticate and return user', done => {
-    var env = server.app.env;
+    let env = server.app.env;
     chai.request(server.app)
       .post(url)
       .send({
@@ -38,10 +35,10 @@ describe('Auth API', () => {
         res.body.full_name.should.equal(env.authUser.full_name);
         res.body.image_url.should.equal(env.authUser.image_url);
         res.body.token.value.should.exist;
-        var expires = new Date(res.body.token.expires);
+        let expires = new Date(res.body.token.expires);
         expires.should.be.above(new Date());
         done();
       })
-      .catch(err => done(err));
+      .catch(done);
   });
 });

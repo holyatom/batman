@@ -6,32 +6,24 @@ import { contains } from 'libs/utils';
 
 _.mixin({ deepExtend: deepExtend(_) });
 
-var
-  config, defaults, readConfigs,
-  nodeEnv = process.env.NODE_ENV || 'development';
+let readConfigs = function (path = '') {
+  let envConfPath = `${__dirname}/${path}${nodeEnv}.js`;
+  let localConfPath = `${__dirname}/${path}local.js`;
+  let confs = [require(`${__dirname}/${path}default.js`)];
 
-readConfigs = function (path = '') {
-  var
-    envConfPath = `${__dirname}/${path}${nodeEnv}.js`,
-    localConfPath = `${__dirname}/${path}local.js`,
-    confs = [require(`${__dirname}/${path}default.js`)];
-
-  if (fs.existsSync(envConfPath)) {
-    confs.push(require(envConfPath));
-  }
-
-  if (fs.existsSync(localConfPath)) {
-    confs.push(require(localConfPath));
-  }
+  if (fs.existsSync(envConfPath)) confs.push(require(envConfPath));
+  if (fs.existsSync(localConfPath)) confs.push(require(localConfPath));
 
   return confs;
 };
 
-defaults = {
+let nodeEnv = process.env.NODE_ENV || 'development';
+
+let defaults = {
   env: nodeEnv,
-  debug: !contains(['staging', 'production'], nodeEnv)
+  debug: !contains(['staging', 'production'], nodeEnv),
 };
 
-config = _.deepExtend(defaults, ...readConfigs());
+let config = _.deepExtend(defaults, ...readConfigs());
 
 export default config;
