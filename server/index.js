@@ -72,8 +72,16 @@ class Server {
     });
 
     mongoose.connection.once('open', () => {
-      this.log('info', `mongodb was connected`);
-      callback();
+      mongoose.connection.db.dropDatabase((err) => {
+        if (err) {
+          console.log('mongodb wasn\'t cleared');
+        } else {
+          callback();
+        }
+
+        this.log('info', `mongodb was connected`);
+        callback();
+      });
     });
   }
 
