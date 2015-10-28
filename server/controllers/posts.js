@@ -10,22 +10,25 @@ export default class PostsController extends ModelController {
 
     if (username !== 'profile') return this.notFound(res);
 
-    req.body.user_id = req.user._id;
+    req.body.user = req.user._id;
     req.body.created = new Date();
 
     super.create(req, res, next);
   }
 
   mapItem (req, res, item) {
-    delete item.user_id;
+    User.findOne({ _id: item.user }).lean().exec((err, user) => {
+      if (err) return next(err);
+      if (!user) return this.notFound(res);
 
-    item.user = {
-      id: req.user._id,
-      full_name: req.user.full_name,
-      image_url: req.user.image_url,
-    };
+      item.user = {
+        _id: req.user._id,
+        full_name: req.user.full_name,
+        image_url: req.user.image_url,
+      };
 
-    res.json(item);
+      res.json(item);
+    });
   }
 
   list (req, res, next) {
@@ -43,21 +46,13 @@ export default class PostsController extends ModelController {
 
   getListOptions (req) {
     let opts = super.getListOptions(req);
-    opts.filters.user_id = req.modelUser._id;
+    opts.filters.user = req.modelUser._id;
 
     return opts;
   }
 
-  mapList (req, res, data) {
-    for (let post of data.collection) {
-      post.user = {
-        id: req.modelUser._id,
-        full_name: req.modelUser.full_name,
-        image_url: req.modelUser.image_url,
-      };
-    }
-
-    res.json(data);
+  populateList (query) {
+    return query.populate('user', '_id full_name image_url');
   }
 }
 
@@ -67,6 +62,6 @@ PostsController.prototype.Model = Post;
 PostsController.prototype.auth = true;
 PostsController.prototype.actions = ['create', 'list'];
 PostsController.prototype.sortableFields = ['created'];
-PostsController.prototype.listFields = ['description', 'address', 'image_urls', 'location_name', 'created', '__v'];
+PostsController.prototype.listFields = ['description', 'address', 'image_urls', 'location_name', 'user', 'created', '__v'];
 
 PostsController.prototype.create.type = 'post';

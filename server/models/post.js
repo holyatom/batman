@@ -14,8 +14,9 @@ let schema = new mongoose.Schema({
   image_urls: {
     type: [String],
   },
-  user_id: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: v.required(),
   },
   created: {

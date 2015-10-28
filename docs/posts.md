@@ -46,7 +46,7 @@ Response:
     {
       "__v": 0,
       "user": {
-        "id": "55ea0a9f95164eb41cec6d51",
+        "_id": "55ea0a9f95164eb41cec6d51",
         "full_name": "Chuck Norris",
         "image_url": "/images/default_avatar.jpg"
       },

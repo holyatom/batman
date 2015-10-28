@@ -92,6 +92,8 @@ export default class ModelController extends Controller {
       .limit(opts.perPage)
       .lean();
 
+    if (this.populateList) query = this.populateList(query);
+
     let dfd = Q.all([query.exec(), countQuery.exec()]);
     dfd.fail((err) => next(err));
     dfd.done(([collection, count]) => {
@@ -113,7 +115,9 @@ export default class ModelController extends Controller {
   getModelItem (req, res, next) {
     let filter = { _id: req.params.id };
 
-    this.Model.findOne(filter, (err, doc) => {
+    let query = this.Model.findOne(filter);
+
+    query.exec((err, doc) => {
       if (err) return next(err);
       if (!doc) return this.notFound(res);
 

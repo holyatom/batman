@@ -30,7 +30,7 @@ describe('Posts API', () => {
         res.body.image_urls.should.deep.equal(post.image_urls);
         res.body.address.should.equal(post.address);
         res.body.location_name.should.equal(post.location_name);
-        res.body.user.id.should.equal(env.user._id);
+        res.body.user._id.should.equal(env.user._id);
         res.body.user.full_name.should.equal(env.user.full_name);
         res.body.user.image_url.should.equal(env.user.image_url);
         res.body._id.should.exist;
