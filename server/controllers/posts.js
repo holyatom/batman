@@ -17,7 +17,7 @@ export default class PostsController extends ModelController {
   }
 
   mapItem (req, res, item) {
-    User.findOne({ _id: item.user }).lean().exec((err, user) => {
+    User.findOne({ _id: item.user }, "_id full_name image_url").lean().exec((err, user) => {
       if (err) return next(err);
       if (!user) return this.notFound(res);
 
