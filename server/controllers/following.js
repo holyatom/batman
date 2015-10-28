@@ -27,7 +27,7 @@ export default class FollowingController extends ModelController {
     });
   }
 
-  mapItem (req, res, item) {
+  mapDoc (req, res, next, doc) {
     res.send({ success: true });
   }
 

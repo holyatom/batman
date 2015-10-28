@@ -43,8 +43,8 @@ export default class ModelController extends Controller {
       model.save((err, doc) => {
         if (err) return next(err);
 
-        if (this.mapItem) {
-          this.mapItem(req, res, doc.toJSON());
+        if (this.mapDoc) {
+          this.mapDoc(req, res, next, doc);
         } else {
           res.json(doc.toJSON());
         }
@@ -56,9 +56,9 @@ export default class ModelController extends Controller {
     res.json({ message: 'Empty method' });
   }
 
-  get (req, res) {
-    if (this.mapItem) {
-      this.mapItem(req, res, req.modelItem.toJSON());
+  get (req, res, next) {
+    if (this.mapDoc) {
+      this.mapDoc(req, res, next, req.modelItem);
     } else {
       res.json(req.modelItem.toJSON());
     }

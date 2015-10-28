@@ -16,18 +16,11 @@ export default class PostsController extends ModelController {
     super.create(req, res, next);
   }
 
-  mapItem (req, res, item) {
-    User.findOne({ _id: item.user }, "_id full_name image_url").lean().exec((err, user) => {
+  mapDoc (req, res, next, doc) {
+    doc.populate({ path: 'user', select: '_id full_name image_url' }, (err, post) => {
       if (err) return next(err);
-      if (!user) return this.notFound(res);
 
-      item.user = {
-        _id: req.user._id,
-        full_name: req.user.full_name,
-        image_url: req.user.image_url,
-      };
-
-      res.json(item);
+      res.json(post.toJSON());
     });
   }
 
