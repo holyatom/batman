@@ -115,9 +115,7 @@ export default class ModelController extends Controller {
   getModelItem (req, res, next) {
     let filter = { _id: req.params.id };
 
-    let query = this.Model.findOne(filter);
-
-    query.exec((err, doc) => {
+    this.Model.findOne(filter).exec((err, doc) => {
       if (err) return next(err);
       if (!doc) return this.notFound(res);
 
