@@ -38,19 +38,20 @@ export default class UsersController extends ModelController {
     });
   }
 
-  mapItem (req, res, item) {
-    if (!req.user) return res.json(item);
+  mapDoc (req, res, next, doc) {
+    let user = doc.toJSON();
+
+    if (!req.user) return res.json(user);
 
     let filter = {
       follower_id: req.user._id,
-      followee_id: item._id,
+      followee_id: user._id,
     };
 
     Following.findOne(filter).lean().exec((err, following) => {
       if (err) return next(err);
-
-      item.is_followed = !!following;
-      return res.json(item);
+      user.is_followed = !!following;
+      return res.json(user);
     });
   }
 

@@ -9,6 +9,7 @@ let post = {
   description: 'Tea party',
   image_urls: ['http://boredom.jpg'],
   address: 'London, The Castle',
+  location_name: 'Dostoevskiy kabak',
 };
 
 describe('Posts API', () => {
@@ -25,10 +26,13 @@ describe('Posts API', () => {
 
         res.status.should.equal(200);
         res.body.__v.should.equal(0);
-        res.body.user_id.should.equal(env.user._id);
         res.body.description.should.equal(post.description);
         res.body.image_urls.should.deep.equal(post.image_urls);
         res.body.address.should.equal(post.address);
+        res.body.location_name.should.equal(post.location_name);
+        res.body.user._id.should.equal(env.user._id);
+        res.body.user.full_name.should.equal(env.user.full_name);
+        res.body.user.image_url.should.equal(env.user.image_url);
         res.body._id.should.exist;
         let created = +(new Date(res.body.created));
         let now = +(new Date());

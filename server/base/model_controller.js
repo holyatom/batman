@@ -43,8 +43,8 @@ export default class ModelController extends Controller {
       model.save((err, doc) => {
         if (err) return next(err);
 
-        if (this.mapItem) {
-          this.mapItem(req, res, doc.toJSON());
+        if (this.mapDoc) {
+          this.mapDoc(req, res, next, doc);
         } else {
           res.json(doc.toJSON());
         }
@@ -56,9 +56,9 @@ export default class ModelController extends Controller {
     res.json({ message: 'Empty method' });
   }
 
-  get (req, res) {
-    if (this.mapItem) {
-      this.mapItem(req, res, req.modelItem.toJSON());
+  get (req, res, next) {
+    if (this.mapDoc) {
+      this.mapDoc(req, res, next, req.modelItem);
     } else {
       res.json(req.modelItem.toJSON());
     }
@@ -92,6 +92,8 @@ export default class ModelController extends Controller {
       .limit(opts.perPage)
       .lean();
 
+    if (this.populateList) query = this.populateList(query);
+
     let dfd = Q.all([query.exec(), countQuery.exec()]);
     dfd.fail((err) => next(err));
     dfd.done(([collection, count]) => {
@@ -113,7 +115,7 @@ export default class ModelController extends Controller {
   getModelItem (req, res, next) {
     let filter = { _id: req.params.id };
 
-    this.Model.findOne(filter, (err, doc) => {
+    this.Model.findOne(filter).exec((err, doc) => {
       if (err) return next(err);
       if (!doc) return this.notFound(res);
 

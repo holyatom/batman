@@ -2,6 +2,7 @@ import _ from 'lodash';
 import ModelController from '../base/model_controller';
 import Post from '../models/post';
 import Following from '../models/following';
+import User from '../models/user';
 
 
 export default class FeedController extends ModelController {
@@ -16,9 +17,13 @@ export default class FeedController extends ModelController {
 
   getListOptions (req) {
     let opts = super.getListOptions(req);
-    opts.filters.user_id = { $in: req.followeeIds };
+    opts.filters.user = { $in: req.followeeIds };
 
     return opts;
+  }
+
+  populateList (query) {
+    return query.populate('user', '_id full_name image_url');
   }
 }
 
@@ -28,7 +33,7 @@ FeedController.prototype.Model = Post;
 FeedController.prototype.auth = true;
 FeedController.prototype.actions = ['list'];
 FeedController.prototype.sortableFields = ['created'];
-FeedController.prototype.listFields = ['description', 'address', 'image_urls', 'created', '__v'];
+FeedController.prototype.listFields = ['description', 'address', 'image_urls', 'user', 'location_name', 'created', '__v'];
 FeedController.prototype.listOrder = '-created';
 
 FeedController.prototype.list.type = 'get';

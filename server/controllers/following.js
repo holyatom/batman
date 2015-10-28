@@ -12,7 +12,6 @@ export default class FollowingController extends ModelController {
       if (!item) return this.notFound(res);
       if (item._id.equals(req.user._id)) return this.error(res, 'follower_equals_followee', 409);
 
-
       let model = {
         follower_id: req.user._id,
         followee_id: item._id,
@@ -28,7 +27,7 @@ export default class FollowingController extends ModelController {
     });
   }
 
-  mapItem (req, res, item) {
+  mapDoc (req, res, next, doc) {
     res.send({ success: true });
   }
 

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import ModelController from '../base/model_controller';
 import Post from '../models/post';
 import User from '../models/user';
@@ -9,10 +10,18 @@ export default class PostsController extends ModelController {
 
     if (username !== 'profile') return this.notFound(res);
 
-    req.body.user_id = req.user._id;
+    req.body.user = req.user._id;
     req.body.created = new Date();
 
     super.create(req, res, next);
+  }
+
+  mapDoc (req, res, next, doc) {
+    doc.populate({ path: 'user', select: '_id full_name image_url' }, (err, post) => {
+      if (err) return next(err);
+
+      res.json(post.toJSON());
+    });
   }
 
   list (req, res, next) {
@@ -23,16 +32,20 @@ export default class PostsController extends ModelController {
       if (err) return next(err);
       if (!doc) return this.notFound(res);
 
-      req.modelUserId = doc._id;
+      req.modelUser = doc;
       super.list(req, res, next);
     });
   }
 
   getListOptions (req) {
     let opts = super.getListOptions(req);
-    opts.filters.user_id = req.modelUserId;
+    opts.filters.user = req.modelUser._id;
 
     return opts;
+  }
+
+  populateList (query) {
+    return query.populate('user', '_id full_name image_url');
   }
 }
 
@@ -42,6 +55,6 @@ PostsController.prototype.Model = Post;
 PostsController.prototype.auth = true;
 PostsController.prototype.actions = ['create', 'list'];
 PostsController.prototype.sortableFields = ['created'];
-PostsController.prototype.listFields = ['description', 'address', 'image_urls', 'user_id', 'created', '__v'];
+PostsController.prototype.listFields = ['description', 'address', 'image_urls', 'location_name', 'user', 'created', '__v'];
 
 PostsController.prototype.create.type = 'post';
