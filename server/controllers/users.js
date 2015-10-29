@@ -9,6 +9,22 @@ export default class UsersController extends ModelController {
     super.get(...args);
   }
 
+  update (req, res, next) {
+    if (req.params.id !== 'profile') return this.notFound(res);
+
+    // FIXME: Add validation
+    let updateFields = _.pick(req.body, ['full_name', 'image_url']);
+    this.Model.findByIdAndUpdate(req.user._id, { $set: updateFields }, { new: true }, (err, doc) => {
+      if (err) return next(err);
+
+      if (this.mapDoc) {
+        this.mapDoc(req, res, next, doc);
+      } else {
+        res.json(doc.toJSON());
+      }
+    });
+  }
+
   create (req, res, next) {
     if (req.authorized) return this.notFound(res);
 
@@ -78,11 +94,15 @@ export default class UsersController extends ModelController {
 UsersController.prototype.logPrefix = 'users-controller';
 UsersController.prototype.urlPrefix = '/users';
 UsersController.prototype.Model = User;
-UsersController.prototype.actions = ['create', 'get', 'list'];
+UsersController.prototype.actions = ['create', 'get', 'list', 'update'];
 UsersController.prototype.filterableFields = ['username'];
 UsersController.prototype.listFields = ['username', 'created', 'full_name', 'image_url', '__v'];
 
 UsersController.prototype.create.type = 'post';
+
+UsersController.prototype.update.type = 'put';
+UsersController.prototype.update.url = '/:id';
+UsersController.prototype.update.auth = true;
 
 UsersController.prototype.get.url = '/:id';
 UsersController.prototype.get.auth = true;
